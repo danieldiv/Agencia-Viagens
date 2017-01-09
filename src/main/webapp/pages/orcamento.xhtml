@@ -1,0 +1,134 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/layout.xhtml">
+
+    <ui:define name="content">
+        <h1 class="aw-page-title">Orçamento</h1>
+        
+        
+
+        <h:form id="frm">
+
+            <p:toolbar>
+                <p:toolbarGroup>
+                    <p:commandButton value="Salvar" action="#{orcamentoBean.salvar()}"
+                                     update="@form"/>
+                </p:toolbarGroup>
+            </p:toolbar>
+
+            <p:messages autoUpdate="false" />
+
+            <div class="ui-fluid">
+                <p:panelGrid columns="4" layout="grid" 
+                             style="margin-top: 20px; margin-bottom: 30px" 
+                             styleClass="panelgrid-noborder"
+                             columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4">
+
+                    <p:outputLabel value="Cliente" for="cliente"/>
+                    <p:inputText id="cliente" value="#{orcamentoBean.orcamento.cliente}" 
+                                 required="true" requiredMessage="Cliente deve ser informado"/>
+
+                    <p:outputLabel value="CPF" for="cpf"/>
+                    <p:inputMask id="cpf" mask="999.999.999-99" value="#{orcamentoBean.orcamento.cpf}" 
+                                 required="true" requiredMessage="CPF deve ser informado"/>
+
+                    <p:outputLabel value="Telefone" for="telefone"/>
+                    <p:inputText id="telefone" value="#{orcamentoBean.orcamento.telefone}" 
+                                 required="true" requiredMessage="Telefone deve ser informado"/>
+
+                    <p:outputLabel value="Condição de Pgto" for="condicaoPgto"/>
+                    <p:selectOneMenu id="condicaoPgto" value="#{orcamentoBean.orcamento.condicaoPagamento}" 
+                                     required="true" requiredMessage="Condição de Pgto deve ser informada">
+                        <f:selectItem itemLabel="Selecione"/>
+                        <f:selectItem itemLabel="A vista" itemValue="A vista"/>
+                        <f:selectItem itemLabel="30 dias" itemValue="30 dias"/>
+                        <f:selectItem itemLabel="30 + 60 dias" itemValue="30 + 60 dias"/>
+                    </p:selectOneMenu>
+
+                    <p:outputLabel value="Dias entrega" for="diasEntrega"/>
+                    <p:inputText id="diasEntrega" value="#{orcamentoBean.orcamento.diasEntrega}"/>
+
+                    <p:selectOneMenu>
+                        <f:selectItems value="#{testeBean.metodo()}" var="v"
+                                       itemLabel="#{v}"/>
+                    </p:selectOneMenu>
+
+                </p:panelGrid>
+            </div>
+
+            <p:commandButton value="Novo Item"
+                             action="#{orcamentoBean.novoItem()}"
+                             oncomplete="PF('itemDialog').show()"
+                             process="@this" update="itemPanel">
+                <p:resetInput target="itemPanel"/>
+            </p:commandButton>
+
+            <p:dataTable id="itensTable" value="#{orcamentoBean.orcamento.itens}" var="item"
+                         emptyMessage="Nenhum item adicionado"
+                         reflow="true"
+                         style="margin-top: 10px">
+
+                <p:column headerText="Descrição">
+                    <h:outputText value="#{item.descricao}"/>
+                </p:column>
+
+                <p:column headerText="Tipo">
+                    <h:outputText value="#{item.tipo.descricao}"/>
+                </p:column>
+
+                <p:column headerText="Preço">
+                    <h:outputText value="#{item.preco}"/>
+                </p:column>
+
+            </p:dataTable>
+
+            <p:dialog widgetVar="itemDialog" header="Novo Item"
+                      resizable="false" style="min-width: 300px" responsive="true">
+
+                <!-- 
+                    ui-fluid : fica no tamanho da tela
+                    grid : fica responsivo
+                    panelgrid-noborder : retira as bordar, css personalizado
+                
+                    ui-grid-col-4, ui-grid-col-8 : 
+                        duas colunas, 6 para cada (padrao)
+                        duas colunas, 4 na primeira e 8 na segunda
+                -->
+                <h:panelGroup id="itemPanel" layout="block" styleClass="ui-fluid">
+                    <p:messages id="msgDialog" autoUpdate="false"/>
+
+                    <p:panelGrid columns="2" layout="grid" styleClass="panelgrid-noborder"
+                                 columnClasses="ui-grid-col-4, ui-grid-col-8">
+
+                        <p:outputLabel value="Descrição" for="descricao"/>
+                        <p:inputText id="descricao" value="#{orcamentoBean.item.descricao}" 
+                                     required="true" requiredMessage="Descrição deve ser informada"/>
+
+                        <p:outputLabel value="Tipo" for="tipo"/>
+                        <p:selectOneMenu id="tipo" 
+                                         required="true" requiredMessage="Tipo deve ser informado">
+                            <f:selectItem itemLabel="Selecione"/>
+                            <f:selectItem itemLabel="Produto" itemValue="PRODUTO"/>
+                            <f:selectItem itemLabel="Serviço" itemValue="SERVICO"/>
+                        </p:selectOneMenu>
+
+                        <p:outputLabel value="Preço" for="preco" />
+                        <p:inputText id="preco" value="#{orcamentoBean.item.preco}" 
+                                     required="true" requiredMessage="Preço deve ser informado">
+                            <f:convertNumber/>
+                        </p:inputText>
+
+                        <p:outputLabel/>
+                        <p:commandButton value="Adicionar" action="#{orcamentoBean.adicionarItem()}"
+                                         update="itemPanel" process="itemPanel itensTable"
+                                         oncomplete="if (!args.validationFailed) PF('itemDialog').hide()"/>
+                    </p:panelGrid>
+                </h:panelGroup>
+            </p:dialog>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

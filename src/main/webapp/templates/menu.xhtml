@@ -1,0 +1,44 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <!--    <nav class="aw-menu">
+            <ul>
+                <li class="is-selected">
+                    <h:link><i class="fa  fa-fw  fa-home"></i>Dashboard</h:link>
+                </li>
+                <li>
+                    <h:link><i class="fa  fa-fw  fa-user"></i>Cleintes</h:link>
+                </li>
+                <li>
+                    <h:link><i class="fa  fa-fw  fa-file-text"></i>Orçamentos</h:link>
+                </li>
+                <li>
+                    <h:link><i class="fa  fa-fw  fa-cog"></i>Configurações</h:link>
+                </li>
+            </ul>
+        </nav>  -->
+    <h:form>
+        <p:menu style="width: 100%" toggleable="false">
+            <p:submenu label="Arquivo">
+                <p:menuitem value="Principal"/>
+                <p:menuitem value="Sair" outcome="/pages/login.xhtml"/>
+            </p:submenu>
+            <p:submenu label="Cadastro">
+                <p:menuitem value="Orçamento" outcome="/pages/orcamento.xhtml"/>
+            </p:submenu>
+            <p:submenu label="Configurações" style="text-decoration:none;">
+                <p:menuitem value="Teste"/>
+                <p:menuitem value="Orçamento" outcome="/pages/orcamento.xhtml"/>
+            </p:submenu>
+        </p:menu>
+    </h:form>
+    <!--    <ul id="lista_menu">
+            <li><a href="#" onclick="mostrarAtivo(this, 1);">Home</a></li>
+            <li><a href="#" onclick="mostrarAtivo(this, 22);">Fotos</a></li>
+            <li><a href="#" onclick="mostrarAtivo(this, 333);">Agenda</a></li>
+            <li><a href="#" onclick="mostrarAtivo(this, 4444);">Contato</a></li>
+        </ul>-->
+</ui:composition>
