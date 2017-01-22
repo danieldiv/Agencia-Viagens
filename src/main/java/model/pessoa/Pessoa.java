@@ -20,28 +20,28 @@ public class Pessoa {
     private String rg;
     private String email;
     private boolean sexo;
+    private int numero;
     private Date dataNasc;
     private Date dataCad;
     private String estCivil;
-    private String nacionalidad;
 
     public Pessoa() {
     }
 
-    public Pessoa(Endereco endereco, Tipo tipo, String cpf, String rg, String email, boolean sexo, Date dataNasc, Date dataCad, String estCivil, String nacionalidad) {
+    public Pessoa(Endereco endereco, Tipo tipo, String cpf, String rg, String email, boolean sexo, int numero, Date dataNasc, Date dataCad, String estCivil) {
         this.endereco = endereco;
         this.tipo = tipo;
         this.cpf = cpf;
         this.rg = rg;
         this.email = email;
         this.sexo = sexo;
+        this.numero = numero;
         this.dataNasc = dataNasc;
         this.dataCad = dataCad;
         this.estCivil = estCivil;
-        this.nacionalidad = nacionalidad;
     }
 
-    public Pessoa(int id_pessoa, Endereco endereco, Tipo tipo, String cpf, String rg, String email, boolean sexo, Date dataNasc, Date dataCad, String estCivil, String nacionalidad) {
+    public Pessoa(int id_pessoa, Endereco endereco, Tipo tipo, String cpf, String rg, String email, boolean sexo, int numero, Date dataNasc, Date dataCad, String estCivil) {
         this.id_pessoa = id_pessoa;
         this.endereco = endereco;
         this.tipo = tipo;
@@ -49,10 +49,10 @@ public class Pessoa {
         this.rg = rg;
         this.email = email;
         this.sexo = sexo;
+        this.numero = numero;
         this.dataNasc = dataNasc;
         this.dataCad = dataCad;
         this.estCivil = estCivil;
-        this.nacionalidad = nacionalidad;
     }
 
     public int getId_pessoa() {
@@ -135,12 +135,12 @@ public class Pessoa {
         this.estCivil = estCivil;
     }
 
-    public String getNacionalidad() {
-        return nacionalidad;
+    public int getNumero() {
+        return numero;
     }
 
-    public void setNacionalidad(String nacionalidad) {
-        this.nacionalidad = nacionalidad;
+    public void setNumero(int numero) {
+        this.numero = numero;
     }
 
     @Override

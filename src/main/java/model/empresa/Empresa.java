@@ -5,6 +5,8 @@
  */
 package model.empresa;
 
+import model.pessoa.Endereco;
+
 /**
  *
  * @author Daniel
@@ -12,19 +14,25 @@ package model.empresa;
 public class Empresa {
 
     private int id_empresa;
+    private Endereco endereco;
+    private int numero;
     private String nome;
     private String cpnj;
 
     public Empresa() {
     }
 
-    public Empresa(String nome, String cpnj) {
+    public Empresa(Endereco endereco, int numero, String nome, String cpnj) {
+        this.endereco = endereco;
+        this.numero = numero;
         this.nome = nome;
         this.cpnj = cpnj;
     }
 
-    public Empresa(int id_empresa, String nome, String cpnj) {
+    public Empresa(int id_empresa, Endereco endereco, int numero, String nome, String cpnj) {
         this.id_empresa = id_empresa;
+        this.endereco = endereco;
+        this.numero = numero;
         this.nome = nome;
         this.cpnj = cpnj;
     }
@@ -51,6 +59,22 @@ public class Empresa {
 
     public void setCpnj(String cpnj) {
         this.cpnj = cpnj;
+    }
+
+    public Endereco getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(Endereco endereco) {
+        this.endereco = endereco;
+    }
+
+    public int getNumero() {
+        return numero;
+    }
+
+    public void setNumero(int numero) {
+        this.numero = numero;
     }
 
     @Override

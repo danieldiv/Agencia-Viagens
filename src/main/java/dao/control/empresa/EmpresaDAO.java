@@ -5,6 +5,7 @@
  */
 package dao.control.empresa;
 
+import dao.control.pessoa.EnderecoDAO;
 import dao.model.DAOException;
 import dao.model.InterfaceDAO;
 import java.sql.Connection;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.empresa.Empresa;
+import model.pessoa.Endereco;
 import util.ConnectionFactory;
 
 /**
@@ -27,7 +29,7 @@ public class EmpresaDAO implements InterfaceDAO<Empresa> {
     private Connection geraConexao() throws DAOException {
         Connection conn;
         try {
-            conn = ConnectionFactory.getConnection("localhost", "3306", "agencia_viagens", "root", "kggjfq377d6f");
+            conn = ConnectionFactory.getConnection("localhost", "3306", "nicetrip", "root", "kggjfq377d6f");
         } catch (Exception e) {
             throw new DAOException(e.getMessage());
         }
@@ -36,13 +38,15 @@ public class EmpresaDAO implements InterfaceDAO<Empresa> {
 
     @Override
     public void save(Empresa obj) throws DAOException {
-        String sql = "INSERT INTO empresa (nome, cnpj) VALUES (?, ?)";
+        String sql = "INSERT INTO empresa (cep, numero, nome, cnpj) VALUES (?, ?)";
 
         try (Connection conn = geraConexao();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setString(1, obj.getNome());
-            ps.setString(2, obj.getCpnj());
+            ps.setInt(1, obj.getEndereco().getCep());
+            ps.setInt(2, obj.getNumero());
+            ps.setString(3, obj.getNome());
+            ps.setString(4, obj.getCpnj());
 
             ps.executeUpdate();
 
@@ -53,14 +57,16 @@ public class EmpresaDAO implements InterfaceDAO<Empresa> {
 
     @Override
     public void update(Empresa obj) throws DAOException {
-        String sql = "UPDATE empresa SET nome = ?, cnpj = ? WHERE id_empresa = ?";
+        String sql = "UPDATE empresa SET cep = ?, numero = ?, nome = ?, cnpj = ? WHERE id_empresa = ?";
 
         try (Connection conn = geraConexao();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setString(1, obj.getNome());
-            ps.setString(2, obj.getCpnj());
-            ps.setInt(3, obj.getId_empresa());
+            ps.setInt(1, obj.getEndereco().getCep());
+            ps.setInt(2, obj.getNumero());
+            ps.setString(3, obj.getNome());
+            ps.setString(4, obj.getCpnj());
+            ps.setInt(5, obj.getId_empresa());
 
             ps.executeUpdate();
 
@@ -88,6 +94,9 @@ public class EmpresaDAO implements InterfaceDAO<Empresa> {
     @Override
     public List<Empresa> getAll() throws DAOException {
         List<Empresa> lista = new ArrayList<>();
+        Endereco endereco;
+        EnderecoDAO daoE = new EnderecoDAO();
+
         String sql = "SELECT * FROM empresa";
 
         try (Connection conn = geraConexao();
@@ -96,10 +105,14 @@ public class EmpresaDAO implements InterfaceDAO<Empresa> {
 
             while (rs.next()) {
                 int id_empresa = rs.getInt("id_empresa");
+                int cep = rs.getInt("cep");
+                int numero = rs.getInt("numero");
                 String nome = rs.getString("nome");
                 String cnpj = rs.getString("cnpj");
 
-                lista.add(new Empresa(id_empresa, nome, cnpj));
+                endereco = daoE.getById(cep);
+
+                lista.add(new Empresa(id_empresa, endereco, numero, nome, cnpj));
             }
         } catch (SQLException ex) {
             Logger.getLogger(EmpresaDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -111,6 +124,8 @@ public class EmpresaDAO implements InterfaceDAO<Empresa> {
     @Override
     public Empresa getById(int id) throws DAOException {
         Empresa empresa = null;
+        Endereco endereco;
+        EnderecoDAO daoE = new EnderecoDAO();
         String sql = "SELECT * FROM empresa WHERE id_empresa = ?";
 
         try (Connection conn = geraConexao(); PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -120,10 +135,14 @@ public class EmpresaDAO implements InterfaceDAO<Empresa> {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     int id_empresa = rs.getInt("id_empresa");
+                    int cep = rs.getInt("cep");
+                    int numero = rs.getInt("numero");
                     String nome = rs.getString("nome");
                     String cnpj = rs.getString("cnpj");
 
-                    empresa = new Empresa(id_empresa, nome, cnpj);
+                    endereco = daoE.getById(cep);
+
+                    empresa = new Empresa(id_empresa, endereco, numero, nome, cnpj);
                 }
             }
         } catch (SQLException ex) {
