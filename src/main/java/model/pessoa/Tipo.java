@@ -5,11 +5,13 @@
  */
 package model.pessoa;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Daniel
  */
-public class Tipo {
+public class Tipo implements Serializable{
 
     private int id_tipo;
     private String nome;
@@ -59,6 +61,11 @@ public class Tipo {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return getNome();
     }
 
 }

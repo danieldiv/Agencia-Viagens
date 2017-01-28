@@ -1,0 +1,40 @@
+PrimeFaces.locales['pt'] = {
+    titleFormat: {
+        month: "MMMM yyyy",
+        week: "d MMM [ yyyy]{ '&#8212;'d [ MMM]  yyyy}",
+        day: "dddd,  yyyy ,  d MMM "
+    },
+    columnFormat: {
+        month: "ddd",
+        week: "ddd d/MM",
+        day: "dddd d/MM"
+    },
+    closeText: 'Fechar',
+    prevText: 'Anterior',
+    nextText: 'Próximo',
+    currentText: 'Começo',
+    monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+        'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+    monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago',
+        'Set', 'Out', 'Nov', 'Dez'],
+    dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta',
+        'Sábado'],
+    dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
+    dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'],
+    weekHeader: 'Semana',
+    firstDay: 1,
+    isRTL: false,
+    showMonthAfterYear: false,
+    yearSuffix: '',
+    timeOnlyTitle: 'Horário',
+    timeText: 'Tempo',
+    hourText: 'Hora',
+    minuteText: 'Minuto',
+    secondText: 'Segundo',
+    currentText : 'Hoje',
+            ampm: false,
+    month: 'Mês',
+    week: 'Semana',
+    day: 'Dia',
+    allDayText: 'Todo Dia'
+};

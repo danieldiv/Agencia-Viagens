@@ -1,0 +1,169 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/layout.xhtml">
+
+    <ui:define name="content">
+        <h1 class="aw-page-title">Pessoa</h1>
+
+        <p:messages id="msgCPF" autoUpdate="false" />
+        
+        <h:form id="frm" onkeypress="return event.keyCode !== 13">
+            <!--o evento acima impede que o enter tenha a opcao de submit-->
+
+            <p:toolbar>
+                <p:toolbarGroup>
+                    <p:commandButton value="Salvar" action="#{pessoaBean.salvar()}"
+                                     update="@form"/>
+                </p:toolbarGroup>
+            </p:toolbar>
+
+            
+            <p:messages id="msgPadrao" autoUpdate="false" />
+
+            <div class="ui-fluid">
+                <p:panelGrid columns="4" layout="grid"
+                             style="margin-top: 20px; margin-bottom: 30px" 
+                             styleClass="panelgrid-noborder"
+                             columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4">
+
+                    <p:outputLabel value="Nome" for="nome"/>
+                    <p:inputText id="nome" value="#{pessoaBean.pessoa.nome}"  required="true" maxlength="100">
+                        <p:ajax event="blur" update="nome" listener="#{pessoaBean.convertUppC()}"/>
+                    </p:inputText>
+
+                    <p:outputLabel value="CPF" for="cpf"/>
+                    <p:inputMask id="cpf" mask="999.999.999-99" value="#{pessoaBean.pessoa.cpf}" 
+                                 required="true">
+                        <p:ajax event="blur" listener="#{pessoaBean.convertCPF()}" update="msgPadrao"/>
+                    </p:inputMask>
+
+                    <p:outputLabel value="RG" for="rg"/>
+                    <p:inputText id="rg" value="#{pessoaBean.pessoa.rg}"  required="true" maxlength="10"/>
+
+                    <p:outputLabel value="Email" for="email"/>
+                    <p:inputText id="email" value="#{pessoaBean.pessoa.email}" maxlength="45"/>
+
+                    <p:outputLabel value="Sexo" for="sexo"/>
+                    <p:selectOneRadio id="sexo" value="#{pessoaBean.pessoa.sexo}">
+                        <f:selectItem itemLabel="Masculino" itemValue="false"/>
+                        <f:selectItem itemLabel="Feminino" itemValue="true"/>
+                    </p:selectOneRadio>
+
+                    <p:outputLabel value="Data Nascimento" for="dataNasc"/>
+                    <p:calendar id="dataNasc" maxdate="#{pessoaBean.dataHoje()}" 
+                                value="#{pessoaBean.pessoa.dataNasc}" required="true"
+                                locale="pt" pattern="dd/MM/yyyy" mask="true" navigator="true"/>
+
+                    <p:outputLabel value="Data Cadastro" for="dataCad"/>
+                    <p:calendar id="dataCad" value="#{pessoaBean.pessoa.dataCad}" disabled="true"/>
+
+                    <p:outputLabel value="Telefone Fixo" for="telFixo"/>
+                    <p:inputMask id="telFixo" value="#{pessoaBean.pessoa.telFixo}" mask="(99)9999-9999"/>
+
+                    <p:outputLabel value="Telefone Celular" for="telCelular"/>
+                    <p:inputMask id="telCelular" value="#{pessoaBean.pessoa.telCelular}" 
+                                 required="true" mask="(99)99999-9999"/>
+
+                    <p:outputLabel value="Estado Civil" for="estCivil"/>
+                    <p:selectOneMenu id="estCivil" value="#{pessoaBean.pessoa.estCivil}" required="true">
+                        <f:selectItem itemLabel="Selecione" itemValue=""/>
+
+                        <f:selectItem itemLabel="Solteiro(a)" itemValue="st" />
+                        <f:selectItem itemLabel="Casado(a)" itemValue="cd"/>
+                        <f:selectItem itemLabel="Separado(a)" itemValue="sp"/>
+                        <f:selectItem itemLabel="Divorciado(a)" itemValue="dv"/>
+                        <f:selectItem itemLabel="Viuvo(a)" itemValue="vu"/>
+                    </p:selectOneMenu>
+
+                    <p:outputLabel value="Tipo" for="tipo"/>
+                    <p:selectOneMenu id="tipo" value="#{pessoaBean.idTipo}" 
+                                     required="true">
+                        <f:selectItem itemLabel="Selecione" itemValue=""/>
+                        <f:selectItems value="#{tipoBean.buscarTodos()}" var="t"
+                                       itemLabel="#{t.nome}" itemValue="#{t.id_tipo}"/>
+                    </p:selectOneMenu>
+
+                </p:panelGrid>
+
+            </div>
+
+            <p:commandButton value="Endereço" oncomplete="PF('endDlg').show()"
+                             process="@this" update="itemPanel">
+                <p:resetInput target="itemPanel"/>
+            </p:commandButton>
+
+            <p:dialog widgetVar="endDlg" header="Endereço" resizable="false"
+                      closeOnEscape="true" responsive="true" modal="true"
+                      showEffect="fade" hideEffect="fade" draggable="false">
+
+                <h:panelGroup id="itemPanel" layout="block" styleClass="ui-fluid">
+                    <p:messages id="msgDialog" autoUpdate="false"/>
+
+                    <p:panelGrid columns="2" layout="grid" styleClass="panelgrid-noborder"
+                                 columnClasses="ui-grid-col-4, ui-grid-col-8">
+
+                        <p:outputLabel value="CEP" for="cep"/>
+                        <p:inputText id="cep" value="#{pessoaBean.CEP}" maxlength="8"
+                                     disabled="#{pessoaBean.btnVisible()}"
+                                     required="true" requiredMessage="Informe o CEP"/>
+
+                        <p:outputLabel value="Numero" for="numero"/>
+                        <p:inputText id="numero" value="#{pessoaBean.pessoa.numero}" maxlength="4"
+                                     disabled="#{pessoaBean.btnVisible()}"
+                                     required="true" requiredMessage="Informe o numero">
+                            <!--<f:validateLongRange minimum="1"/>-->
+                        </p:inputText>
+
+                        <p:outputLabel value="Complemento" for="complemento"/>
+                        <p:inputText id="complemento" disabled="#{pessoaBean.btnVisible()}" maxlength="45"
+                                     value="#{pessoaBean.pessoa.complemento}"/>
+
+                        <p:outputLabel value="Logradouro" for="logradouro"/>
+                        <p:inputText id="logradouro" disabled="true" size="40"
+                                     value="#{pessoaBean.pessoa.endereco.logradouro}"/>
+
+                        <p:outputLabel value="Bairro" for="bairro"/>
+                        <p:inputText id="bairro" disabled="true" 
+                                     value="#{pessoaBean.pessoa.endereco.bairro}"/>
+
+                        <p:outputLabel value="Cidade" for="cidade"/>
+                        <p:inputText id="cidade" disabled="true" 
+                                     value="#{pessoaBean.pessoa.endereco.cidade}"/>
+
+                        <p:outputLabel value="Estado" for="estado"/>
+                        <p:inputText id="estado" disabled="true" 
+                                     value="#{pessoaBean.pessoa.endereco.estado}"/>
+
+                        <p:outputLabel value="UF" for="uf"/>
+                        <p:inputText id="uf" disabled="true" 
+                                     value="#{pessoaBean.pessoa.endereco.uf}"/>
+
+                        <p:outputLabel/>
+                        <p:commandButton value="Pesquisar" update="itemPanel" 
+                                         id="pesquisar" disabled="#{pessoaBean.btnVisible()}"
+                                         process="itemPanel" action="#{pessoaBean.salvarArquivo()}">
+                        </p:commandButton>
+
+                        <p:outputLabel/>
+                        <p:commandButton value="Limpar" update="itemPanel" 
+                                         id="limpar" disabled="#{!pessoaBean.btnVisible()}"
+                                         process="itemPanel" action="#{pessoaBean.novo()}"/>
+
+                        <p:outputLabel/>
+                        <p:commandButton value="Sair" update="itemPanel" process="itemPanel" 
+                                         id="adicionar" disabled="#{!pessoaBean.btnVisible()}"
+                                         oncomplete="if (!args.validationFailed) PF('endDlg').hide()"/>
+
+
+                    </p:panelGrid>
+
+                </h:panelGroup>
+            </p:dialog>
+
+        </h:form>
+    </ui:define>
+
+</ui:composition>

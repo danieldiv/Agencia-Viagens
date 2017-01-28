@@ -27,7 +27,7 @@ public class TipoCarroDAO implements InterfaceDAO<TipoCarro> {
     private Connection geraConexao() throws DAOException {
         Connection conn;
         try {
-            conn = ConnectionFactory.getConnection("localhost", "3306", "agencia_viagens", "root", "kggjfq377d6f");
+            conn = ConnectionFactory.getConnection("localhost", "3306", "nicetrip", "root", "kggjfq377d6f");
         } catch (Exception e) {
             throw new DAOException(e.getMessage());
         }

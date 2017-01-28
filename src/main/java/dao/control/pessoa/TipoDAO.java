@@ -7,6 +7,7 @@ package dao.control.pessoa;
 
 import dao.model.DAOException;
 import dao.model.InterfaceDAO;
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,12 +23,12 @@ import util.ConnectionFactory;
  *
  * @author Daniel
  */
-public class TipoDAO implements InterfaceDAO<Tipo> {
+public class TipoDAO implements InterfaceDAO<Tipo>, Serializable {
 
     private Connection geraConexao() throws DAOException {
         Connection conn;
         try {
-            conn = ConnectionFactory.getConnection("localhost", "3306", "agencia_viagens", "root", "kggjfq377d6f");
+            conn = ConnectionFactory.getConnection("localhost", "3306", "nicetrip", "root", "kggjfq377d6f");
         } catch (Exception e) {
             throw new DAOException(e.getMessage());
         }

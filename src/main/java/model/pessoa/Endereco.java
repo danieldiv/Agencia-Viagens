@@ -14,17 +14,19 @@ public class Endereco {
     private int cep;
     private String logradouro;
     private String bairro;
-    private String ciadade;
+    private String cidade;
+    private String estado;
     private String uf;
 
     public Endereco() {
     }
 
-    public Endereco(int cep, String logradouro, String bairro, String ciadade, String uf) {
+    public Endereco(int cep, String logradouro, String bairro, String cidade, String estado, String uf) {
         this.cep = cep;
         this.logradouro = logradouro;
         this.bairro = bairro;
-        this.ciadade = ciadade;
+        this.cidade = cidade;
+        this.estado = estado;
         this.uf = uf;
     }
 
@@ -52,12 +54,12 @@ public class Endereco {
         this.bairro = bairro;
     }
 
-    public String getCiadade() {
-        return ciadade;
+    public String getCidade() {
+        return cidade;
     }
 
-    public void setCiadade(String ciadade) {
-        this.ciadade = ciadade;
+    public void setCidade(String cidade) {
+        this.cidade = cidade;
     }
 
     public String getUf() {
@@ -66,6 +68,14 @@ public class Endereco {
 
     public void setUf(String uf) {
         this.uf = uf;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 
     @Override
@@ -91,6 +101,11 @@ public class Endereco {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Endereco{" + "cep=" + cep + ", logradouro=" + logradouro + ", bairro=" + bairro + ", cidade=" + cidade + ", estado=" + estado + ", uf=" + uf + '}';
     }
 
 }
