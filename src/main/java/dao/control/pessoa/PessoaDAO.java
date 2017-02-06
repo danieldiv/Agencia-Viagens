@@ -62,7 +62,7 @@ public class PessoaDAO implements InterfaceDAO<Pessoa> {
             ps.setString(4, obj.getCpf());
             ps.setString(5, obj.getRg());
             ps.setString(6, obj.getEmail());
-            ps.setBoolean(7, obj.isSexo());
+            ps.setString(7, obj.getSexo());
             ps.setInt(8, obj.getNumero());
             ps.setString(9, obj.getComplemento());
             ps.setDate(10, (Date) dataN);
@@ -98,13 +98,12 @@ public class PessoaDAO implements InterfaceDAO<Pessoa> {
             java.sql.Date dataC = new java.sql.Date(obj.getDataCad().getTime());
             java.sql.Date dataN = new java.sql.Date(obj.getDataNasc().getTime());
 
-            
             ps.setInt(1, obj.getEndereco().getCep());
             ps.setString(2, obj.getNome());
             ps.setString(3, obj.getCpf());
             ps.setString(4, obj.getRg());
             ps.setString(5, obj.getEmail());
-            ps.setBoolean(6, obj.isSexo());
+            ps.setString(6, obj.getSexo());
             ps.setInt(7, obj.getNumero());
             ps.setString(8, obj.getComplemento());
             ps.setDate(9, (Date) dataN);
@@ -158,7 +157,7 @@ public class PessoaDAO implements InterfaceDAO<Pessoa> {
                 String cpf = rs.getString("cpf");
                 String rg = rs.getString("rg");
                 String email = rs.getString("email");
-                boolean sexo = rs.getBoolean("sexo");
+                String sexo = rs.getString("sexo");
                 int numero = rs.getInt("numero");
                 String complemento = rs.getString("complemento");
                 Date dataNasc = rs.getDate("dataNasc");
@@ -166,6 +165,10 @@ public class PessoaDAO implements InterfaceDAO<Pessoa> {
                 String estCivil = rs.getString("estCivil");
                 String telFixo = rs.getString("telFixo");
                 String telCelular = rs.getString("telCelular");
+
+                cpf = montarCpf(cpf);
+                sexo = montarSexo(sexo);
+                estCivil = montarEstCivil(estCivil);
 
                 endereco = daoE.getById(rs.getInt("cep"));
                 tipo = daoT.getById(rs.getInt("id_tipo"));
@@ -201,7 +204,7 @@ public class PessoaDAO implements InterfaceDAO<Pessoa> {
                     String cpf = rs.getString("cpf");
                     String rg = rs.getString("rg");
                     String email = rs.getString("email");
-                    boolean sexo = rs.getBoolean("sexo");
+                    String sexo = rs.getString("sexo");
                     int numero = rs.getInt("numero");
                     String complemento = rs.getString("complemento");
                     Date dataNasc = rs.getDate("dataNasc");
@@ -209,6 +212,10 @@ public class PessoaDAO implements InterfaceDAO<Pessoa> {
                     String estCivil = rs.getString("estCivil");
                     String telFixo = rs.getString("telFixo");
                     String telCelular = rs.getString("telCelular");
+
+                    cpf = montarCpf(cpf);
+                    sexo = montarSexo(sexo);
+                    estCivil = montarEstCivil(estCivil);
 
                     endereco = daoE.getById(rs.getInt("cep"));
                     tipo = daoT.getById(rs.getInt("id_tipo"));
@@ -222,4 +229,45 @@ public class PessoaDAO implements InterfaceDAO<Pessoa> {
         return pessoa;
     }
 
+    private String montarCpf(String cpf) {
+        String[] CPF = new String[7];
+        String newCpf = "";
+
+        CPF[0] = cpf.substring(0, 3);
+        CPF[1] = ".";
+        CPF[2] = cpf.substring(3, 6);
+        CPF[3] = ".";
+        CPF[4] = cpf.substring(6, 9);
+        CPF[5] = "-";
+        CPF[6] = cpf.substring(9, 11);
+
+        for (String string : CPF) {
+            newCpf += string;
+        }
+        return newCpf;
+    }
+
+    private String montarSexo(String sexo) {
+        switch (sexo) {
+            case "M":
+                return "Masculino";
+            default:
+                return "Feminino";
+        }
+    }
+
+    private String montarEstCivil(String stCivil) {
+        switch (stCivil) {
+            case "st":
+                return "Solteiro";
+            case "cd":
+                return "Casado";
+            case "sp":
+                return "Separado";
+            case "dv":
+                return "Divorciado";
+            default:
+                return "Viuvo";
+        }
+    }
 }

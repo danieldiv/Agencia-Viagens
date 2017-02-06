@@ -5,11 +5,13 @@
  */
 package model.pessoa;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Daniel
  */
-public class Endereco {
+public class Endereco implements Serializable{
 
     private int cep;
     private String logradouro;

@@ -21,7 +21,7 @@ public class Pessoa implements Serializable {
     private String cpf;
     private String rg;
     private String email;
-    private boolean sexo;
+    private String sexo;
     private int numero;
     private String complemento;
     private Date dataNasc;
@@ -33,7 +33,7 @@ public class Pessoa implements Serializable {
     public Pessoa() {
     }
 
-    public Pessoa(Endereco endereco, Tipo tipo, String nome, String cpf, String rg, String email, boolean sexo, int numero, String complemento, Date dataNasc, Date dataCad, String estCivil, String telFixo, String telCelular) {
+    public Pessoa(Endereco endereco, Tipo tipo, String nome, String cpf, String rg, String email, String sexo, int numero, String complemento, Date dataNasc, Date dataCad, String estCivil, String telFixo, String telCelular) {
         this.endereco = endereco;
         this.tipo = tipo;
         this.nome = nome;
@@ -50,12 +50,12 @@ public class Pessoa implements Serializable {
         this.telCelular = telCelular;
     }
 
-    public Pessoa(int id_pessoa, Endereco endereco, Tipo tipo, String nome, String cpf, String rg, String email, boolean sexo, int numero, String complemento, Date dataNasc, Date dataCad, String estCivil, String telFixo, String telCelular) {
+    public Pessoa(int id_pessoa, Endereco endereco, Tipo tipo, String nome, String cpf, String rg, String email, String sexo, int numero, String complemento, Date dataNasc, Date dataCad, String estCivil, String telFixo, String telCelular) {
         this.id_pessoa = id_pessoa;
         this.endereco = endereco;
         this.tipo = tipo;
         this.nome = nome;
-        setCpf(cpf);
+        this.cpf = cpf;
         this.rg = rg;
         this.email = email;
         this.sexo = sexo;
@@ -97,7 +97,7 @@ public class Pessoa implements Serializable {
     }
 
     public void setCpf(String cpf) {
-        this.cpf = montarCpf(cpf);
+        this.cpf = cpf;
     }
 
     public String getRg() {
@@ -116,11 +116,11 @@ public class Pessoa implements Serializable {
         this.email = email;
     }
 
-    public boolean isSexo() {
+    public String getSexo() {
         return sexo;
     }
 
-    public void setSexo(boolean sexo) {
+    public void setSexo(String sexo) {
         this.sexo = sexo;
     }
 
@@ -211,24 +211,6 @@ public class Pessoa implements Serializable {
             return false;
         }
         return true;
-    }
-    
-    private String montarCpf(String cpf){
-        String[] CPF = new String[7];
-        String newCpf = "";
-
-        CPF[0] = cpf.substring(0, 3);
-        CPF[1] = ".";
-        CPF[2] = cpf.substring(3, 6);
-        CPF[3] = ".";
-        CPF[4] = cpf.substring(6, 9);
-        CPF[5] = "-";
-        CPF[6] = cpf.substring(9, 11);
-
-        for (String string : CPF) {
-            newCpf += string;
-        }
-        return newCpf;
     }
 
     @Override

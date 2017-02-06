@@ -54,7 +54,6 @@ public class PessoaBean implements InterfaceBean, Serializable {
         habilitar = false;
     }
 
-    //<editor-fold defaultstate="collapsed" desc="Getters e Setters">
     public int getIdTipo() {
         return idTipo;
     }
@@ -95,8 +94,7 @@ public class PessoaBean implements InterfaceBean, Serializable {
         this.habilitar = habilitar;
     }
 
-    //</editor-fold>
-    //<editor-fold defaultstate="collapsed" desc="Metodos">
+
     /**
      * VALIDACAO DO PRIMEIRO DIGITO
      *
@@ -127,6 +125,7 @@ public class PessoaBean implements InterfaceBean, Serializable {
      */
     public boolean convertCPF() {
         if (!getPessoa().getCpf().equals("___.___.___-__")) {
+            System.out.println("teste");
             String[] cpf = getPessoa().getCpf().split("[.-]");
 
             String newCpf = "";
@@ -148,7 +147,7 @@ public class PessoaBean implements InterfaceBean, Serializable {
 
             boolean valida = false;
 
-            if (!verificaCPF(aryCpf)) {
+            if (!verificaVal(aryCpf)) {
                 if (validaCPF(aryCpf, 0, 1)) {
                     if (!validaCPF(aryCpf, 1, 0)) {
                         valida = true;
@@ -192,15 +191,29 @@ public class PessoaBean implements InterfaceBean, Serializable {
      * @param cpf
      * @return
      */
-    private boolean verificaCPF(int[] cpf) {
+//    private boolean verificaVal(int[] cpf) {
+//        int cont = 0;
+//
+//        for (int i = 0; i < cpf.length - 1; i++) {
+//            if (cpf[i] == cpf[i + 1]) {
+//                cont++;
+//            }
+//        }
+//        return cont == 10;
+//    }
+    
+    /**
+     * Verifica de todos os digitos sao iguais
+     */
+    private static boolean verificaVal(int[] val) {
         int cont = 0;
 
-        for (int i = 0; i < cpf.length - 1; i++) {
-            if (cpf[i] == cpf[i + 1]) {
+        for (int i = 0; i < val.length - 1; i++) {
+            if (val[i] == val[i + 1]) {
                 cont++;
             }
         }
-        return cont == 10;
+        return cont == (val.length - 1);
     }
 
     /**
@@ -248,7 +261,7 @@ public class PessoaBean implements InterfaceBean, Serializable {
         }
     }
 
-    public void novo() {
+    public void limpar() {
         pessoa.setEndereco(new Endereco());
         pessoa.setNumero(0);
         pessoa.setComplemento("");
@@ -309,8 +322,6 @@ public class PessoaBean implements InterfaceBean, Serializable {
         modifHab();
     }
 
-    //</editor-fold>
-    //<editor-fold defaultstate="collapsed" desc="Metodos Override">
     @Override
     public void salvar() {
         if (pessoa.getEndereco() == null) {
@@ -338,13 +349,23 @@ public class PessoaBean implements InterfaceBean, Serializable {
 
     @Override
     public void excluir() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            PessoaDAO dao = new PessoaDAO();
+            dao.delete(pessoaSelecionada.getId_pessoa());
+        } catch (DAOException ex) {
+            Logger.getLogger(PessoaBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
     public List<Pessoa> buscarTodos() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        PessoaDAO dao = new PessoaDAO();
+        try {
+            return dao.getAll();
+        } catch (DAOException ex) {
+            Logger.getLogger(PessoaBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
-    //</editor-fold>
 
 }

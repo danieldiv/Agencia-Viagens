@@ -6,21 +6,22 @@
                 template="/templates/layout.xhtml">
 
     <ui:define name="content">
-        <h1 class="aw-page-title">Pessoa</h1>
+        <h1 class="aw-page-title">Pessoa(s)</h1>
 
         <p:messages id="msgCPF" autoUpdate="false" />
-        
-        <h:form id="frm" onkeypress="return event.keyCode !== 13">
+
+        <h:form id="frm">
+            <!--<h:form id="frm" onkeypress="return event.keyCode !== 13">-->
             <!--o evento acima impede que o enter tenha a opcao de submit-->
 
             <p:toolbar>
                 <p:toolbarGroup>
-                    <p:commandButton value="Salvar" action="#{pessoaBean.salvar()}"
-                                     update="@form"/>
+                    <p:commandButton value="Salvar" action="#{pessoaBean.salvar()}" update="@form"/>
+                    <p:button value="Cancelar" outcome="/pages/pessoaPesquisa"/>
                 </p:toolbarGroup>
             </p:toolbar>
 
-            
+
             <p:messages id="msgPadrao" autoUpdate="false" />
 
             <div class="ui-fluid">
@@ -48,8 +49,8 @@
 
                     <p:outputLabel value="Sexo" for="sexo"/>
                     <p:selectOneRadio id="sexo" value="#{pessoaBean.pessoa.sexo}">
-                        <f:selectItem itemLabel="Masculino" itemValue="false"/>
-                        <f:selectItem itemLabel="Feminino" itemValue="true"/>
+                        <f:selectItem itemLabel="Masculino" itemValue="M"/>
+                        <f:selectItem itemLabel="Feminino" itemValue="F"/>
                     </p:selectOneRadio>
 
                     <p:outputLabel value="Data Nascimento" for="dataNasc"/>
@@ -108,17 +109,20 @@
                         <p:outputLabel value="CEP" for="cep"/>
                         <p:inputText id="cep" value="#{pessoaBean.CEP}" maxlength="8"
                                      disabled="#{pessoaBean.btnVisible()}"
+                                     onkeypress="return event.keyCode !== 13"
                                      required="true" requiredMessage="Informe o CEP"/>
 
                         <p:outputLabel value="Numero" for="numero"/>
                         <p:inputText id="numero" value="#{pessoaBean.pessoa.numero}" maxlength="4"
                                      disabled="#{pessoaBean.btnVisible()}"
+                                     onkeypress="return event.keyCode !== 13"
                                      required="true" requiredMessage="Informe o numero">
                             <!--<f:validateLongRange minimum="1"/>-->
                         </p:inputText>
 
                         <p:outputLabel value="Complemento" for="complemento"/>
-                        <p:inputText id="complemento" disabled="#{pessoaBean.btnVisible()}" maxlength="45"
+                        <p:inputText id="complemento" disabled="#{pessoaBean.btnVisible()}" 
+                                     maxlength="45" onkeypress="return event.keyCode !== 13"
                                      value="#{pessoaBean.pessoa.complemento}"/>
 
                         <p:outputLabel value="Logradouro" for="logradouro"/>
@@ -150,7 +154,7 @@
                         <p:outputLabel/>
                         <p:commandButton value="Limpar" update="itemPanel" 
                                          id="limpar" disabled="#{!pessoaBean.btnVisible()}"
-                                         process="itemPanel" action="#{pessoaBean.novo()}"/>
+                                         process="itemPanel" action="#{pessoaBean.limpar()}"/>
 
                         <p:outputLabel/>
                         <p:commandButton value="Sair" update="itemPanel" process="itemPanel" 
