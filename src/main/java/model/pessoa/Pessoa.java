@@ -21,7 +21,8 @@ public class Pessoa implements Serializable {
     private String cpf;
     private String rg;
     private String email;
-    private String sexo;
+    private boolean sexo;
+    private String newSexo;
     private int numero;
     private String complemento;
     private Date dataNasc;
@@ -33,7 +34,7 @@ public class Pessoa implements Serializable {
     public Pessoa() {
     }
 
-    public Pessoa(Endereco endereco, Tipo tipo, String nome, String cpf, String rg, String email, String sexo, int numero, String complemento, Date dataNasc, Date dataCad, String estCivil, String telFixo, String telCelular) {
+    public Pessoa(Endereco endereco, Tipo tipo, String nome, String cpf, String rg, String email, boolean sexo, int numero, String complemento, Date dataNasc, Date dataCad, String estCivil, String telFixo, String telCelular) {
         this.endereco = endereco;
         this.tipo = tipo;
         this.nome = nome;
@@ -50,7 +51,13 @@ public class Pessoa implements Serializable {
         this.telCelular = telCelular;
     }
 
-    public Pessoa(int id_pessoa, Endereco endereco, Tipo tipo, String nome, String cpf, String rg, String email, String sexo, int numero, String complemento, Date dataNasc, Date dataCad, String estCivil, String telFixo, String telCelular) {
+    public Pessoa(int id_pessoa, Endereco endereco, Tipo tipo, String nome, String cpf, String rg, String email, boolean sexo, int numero, String complemento, Date dataNasc, Date dataCad, String estCivil, String telFixo, String telCelular) {
+        if (sexo) {
+            this.newSexo = "Feminino";
+        } else {
+            this.newSexo = "Masculino";
+        }
+
         this.id_pessoa = id_pessoa;
         this.endereco = endereco;
         this.tipo = tipo;
@@ -66,6 +73,10 @@ public class Pessoa implements Serializable {
         this.estCivil = estCivil;
         this.telFixo = telFixo;
         this.telCelular = telCelular;
+    }
+
+    public String getNewSexo() {
+        return newSexo;
     }
 
     public int getId_pessoa() {
@@ -116,11 +127,11 @@ public class Pessoa implements Serializable {
         this.email = email;
     }
 
-    public String getSexo() {
+    public boolean isSexo() {
         return sexo;
     }
 
-    public void setSexo(String sexo) {
+    public void setSexo(boolean sexo) {
         this.sexo = sexo;
     }
 

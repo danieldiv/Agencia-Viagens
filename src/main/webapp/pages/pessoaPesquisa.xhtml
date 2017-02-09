@@ -52,7 +52,8 @@
                 <p:column headerText="Excluir" style="width: 6%; text-align: center">
                     <p:commandButton icon="ui-icon ui-icon-close" action="#{pessoaBean.excluir()}" update="@all">
                         <f:setPropertyActionListener target="#{pessoaBean.pessoaSelecionada}" value="#{pessoas}"/>
-                        <p:confirm header="Confirmação" message="Deseja excluir?" icon="ui-icon-alert" />
+                        <p:confirm header="Confirmação" icon="ui-icon-alert" 
+                                   message="Deseja excluir o(a) #{pessoas.tipo} #{pessoas.nome}?"/>
                     </p:commandButton>
 
                     <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
@@ -90,7 +91,7 @@
                                 <p:inputText disabled="true" value="#{pessoaBean.pessoaSelecionada.email}"/>
 
                                 <p:outputLabel value="Sexo"/>
-                                <p:inputText disabled="true" value="#{pessoaBean.pessoaSelecionada.sexo}"/>
+                                <p:inputText disabled="true" value="#{pessoaBean.pessoaSelecionada.newSexo}"/>
 
                                 <p:outputLabel value="Data Nasc."/>
                                 <p:inputText disabled="true" value="#{pessoaBean.pessoaSelecionada.dataNasc}"/>

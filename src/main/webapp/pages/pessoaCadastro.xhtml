@@ -38,7 +38,7 @@
                     <p:outputLabel value="CPF" for="cpf"/>
                     <p:inputMask id="cpf" mask="999.999.999-99" value="#{pessoaBean.pessoa.cpf}" 
                                  required="true">
-                        <p:ajax event="blur" listener="#{pessoaBean.convertCPF()}" update="msgPadrao"/>
+                        <p:ajax event="blur" listener="#{pessoaBean.verificaCPF()}" update="msgPadrao"/>
                     </p:inputMask>
 
                     <p:outputLabel value="RG" for="rg"/>
@@ -49,8 +49,8 @@
 
                     <p:outputLabel value="Sexo" for="sexo"/>
                     <p:selectOneRadio id="sexo" value="#{pessoaBean.pessoa.sexo}">
-                        <f:selectItem itemLabel="Masculino" itemValue="M"/>
-                        <f:selectItem itemLabel="Feminino" itemValue="F"/>
+                        <f:selectItem itemLabel="Masculino" itemValue="false"/>
+                        <f:selectItem itemLabel="Feminino" itemValue="true"/>
                     </p:selectOneRadio>
 
                     <p:outputLabel value="Data Nascimento" for="dataNasc"/>
@@ -62,11 +62,15 @@
                     <p:calendar id="dataCad" value="#{pessoaBean.pessoa.dataCad}" disabled="true"/>
 
                     <p:outputLabel value="Telefone Fixo" for="telFixo"/>
-                    <p:inputMask id="telFixo" value="#{pessoaBean.pessoa.telFixo}" mask="(99)9999-9999"/>
+                    <p:inputMask id="telFixo" value="#{pessoaBean.pessoa.telFixo}" mask="(99)9999-9999">
+                        <p:ajax event="blur" listener="#{pessoaBean.checkTel(0)}" update="msgPadrao"/>
+                    </p:inputMask>
 
                     <p:outputLabel value="Telefone Celular" for="telCelular"/>
                     <p:inputMask id="telCelular" value="#{pessoaBean.pessoa.telCelular}" 
-                                 required="true" mask="(99)99999-9999"/>
+                                 required="true" mask="(99)99999-9999">
+                        <p:ajax event="blur" listener="#{pessoaBean.checkTel(1)}" update="msgPadrao"/>
+                    </p:inputMask>
 
                     <p:outputLabel value="Estado Civil" for="estCivil"/>
                     <p:selectOneMenu id="estCivil" value="#{pessoaBean.pessoa.estCivil}" required="true">

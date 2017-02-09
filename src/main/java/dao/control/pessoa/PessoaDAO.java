@@ -62,7 +62,7 @@ public class PessoaDAO implements InterfaceDAO<Pessoa> {
             ps.setString(4, obj.getCpf());
             ps.setString(5, obj.getRg());
             ps.setString(6, obj.getEmail());
-            ps.setString(7, obj.getSexo());
+            ps.setBoolean(7, obj.isSexo());
             ps.setInt(8, obj.getNumero());
             ps.setString(9, obj.getComplemento());
             ps.setDate(10, (Date) dataN);
@@ -103,7 +103,7 @@ public class PessoaDAO implements InterfaceDAO<Pessoa> {
             ps.setString(3, obj.getCpf());
             ps.setString(4, obj.getRg());
             ps.setString(5, obj.getEmail());
-            ps.setString(6, obj.getSexo());
+            ps.setBoolean(6, obj.isSexo());
             ps.setInt(7, obj.getNumero());
             ps.setString(8, obj.getComplemento());
             ps.setDate(9, (Date) dataN);
@@ -157,7 +157,7 @@ public class PessoaDAO implements InterfaceDAO<Pessoa> {
                 String cpf = rs.getString("cpf");
                 String rg = rs.getString("rg");
                 String email = rs.getString("email");
-                String sexo = rs.getString("sexo");
+                boolean sexo = rs.getBoolean("sexo");
                 int numero = rs.getInt("numero");
                 String complemento = rs.getString("complemento");
                 Date dataNasc = rs.getDate("dataNasc");
@@ -167,7 +167,7 @@ public class PessoaDAO implements InterfaceDAO<Pessoa> {
                 String telCelular = rs.getString("telCelular");
 
                 cpf = montarCpf(cpf);
-                sexo = montarSexo(sexo);
+//                String newSexo = montarSexo(sexo);
                 estCivil = montarEstCivil(estCivil);
 
                 endereco = daoE.getById(rs.getInt("cep"));
@@ -204,7 +204,7 @@ public class PessoaDAO implements InterfaceDAO<Pessoa> {
                     String cpf = rs.getString("cpf");
                     String rg = rs.getString("rg");
                     String email = rs.getString("email");
-                    String sexo = rs.getString("sexo");
+                    boolean sexo = rs.getBoolean("sexo");
                     int numero = rs.getInt("numero");
                     String complemento = rs.getString("complemento");
                     Date dataNasc = rs.getDate("dataNasc");
@@ -214,7 +214,7 @@ public class PessoaDAO implements InterfaceDAO<Pessoa> {
                     String telCelular = rs.getString("telCelular");
 
                     cpf = montarCpf(cpf);
-                    sexo = montarSexo(sexo);
+//                    String newSexo = montarSexo(sexo);
                     estCivil = montarEstCivil(estCivil);
 
                     endereco = daoE.getById(rs.getInt("cep"));
@@ -247,12 +247,11 @@ public class PessoaDAO implements InterfaceDAO<Pessoa> {
         return newCpf;
     }
 
-    private String montarSexo(String sexo) {
-        switch (sexo) {
-            case "M":
-                return "Masculino";
-            default:
-                return "Feminino";
+    private String montarSexo(boolean sexo) {
+        if (sexo) {
+            return "Masculino";
+        } else {
+            return "Feminino";
         }
     }
 
