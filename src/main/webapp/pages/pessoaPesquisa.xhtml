@@ -17,23 +17,54 @@
             </p:toolbar>
             <br/>
             <p:dataTable value="#{pessoaBean.buscarTodos()}" var="pessoas" 
-                         emptyMessage="Nenhum dado encontrado" 
+                         emptyMessage="Nenhum dado encontrado" widgetVar="psTable"
                          paginator="true" rows="10">
                 <p:column headerText="Nome">
                     <p:outputLabel value="#{pessoas.nome}"/>
                 </p:column>
 
-                <p:column headerText="Tipo" style="width: 10%">
+<!--                <p:column filterBy="#{pessoas.tipo.nome}" filterMatchMode="in">
+                    <f:facet name="filter">
+                        <p:selectCheckboxMenu label="Tipos" onchange="PF('psTable').filter()">
+                            <f:selectItems value="#{tipoBean.buscarTodos()}"/>
+                        </p:selectCheckboxMenu>
+                    </f:facet>
                     <p:outputLabel value="#{pessoas.tipo.nome}"/>
                 </p:column>
+
+                -->                
+                <p:column filterBy="#{pessoas.tipo.nome}" filterMatchMode="equals" 
+                          style="width: 21%" footerText="Tipo">
+                    <f:facet name="filter">
+                        <p:selectOneButton onchange="PF('psTable').filter()">
+                            <f:selectItem itemLabel="T" itemValue=""/>
+                            <f:selectItem itemLabel="P" itemValue="Passageiro"/>
+                            <f:selectItem itemLabel="D" itemValue="Dependente"/>
+                            <f:selectItem itemLabel="M" itemValue="Motorista"/>
+                            <f:selectItem itemLabel="G" itemValue="Guia"/>
+                        </p:selectOneButton>
+                    </f:facet>
+                    <p:outputLabel value="#{pessoas.tipo.nome}"/>
+                </p:column>
+
+<!--                <p:column filterBy="#{pessoas.tipo.nome}" footerText="Tipo" 
+                          filterMatchMode="exact" >
+                    <f:facet name="filter">
+                        <p:selectOneMenu onchange="PF('psTable').filter()">
+                            <f:selectItem itemLabel="Todos" itemValue="#{null}" noSelectionOption="true"/>
+                            <f:selectItems value="#{tipoBean.buscarTodos()}"/>
+                        </p:selectOneMenu>
+                    </f:facet>
+                    <p:outputLabel value="#{pessoas.tipo.nome}"/>
+                </p:column>-->
 
                 <p:column headerText="CPF" style="width: 12%; text-align: center">
                     <p:outputLabel value="#{pessoas.cpf}"/>
                 </p:column>
 
-                <p:column headerText="RG" style="width: 12%">
+<!--                <p:column headerText="RG" style="width: 12%">
                     <p:outputLabel value="#{pessoas.rg}"/>
-                </p:column>
+                </p:column>-->
 
                 <p:column headerText="Tel. Celular" style="width: 12%; text-align: center">
                     <p:outputLabel value="#{pessoas.telCelular}"/>
