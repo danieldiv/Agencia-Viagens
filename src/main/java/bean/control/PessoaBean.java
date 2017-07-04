@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -29,6 +30,8 @@ import javax.faces.context.FacesContext;
 import model.pessoa.Endereco;
 import model.pessoa.Pessoa;
 import model.pessoa.Tipo;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
 
 /**
  *
@@ -37,20 +40,24 @@ import model.pessoa.Tipo;
 @ManagedBean
 @ViewScoped
 public class PessoaBean implements InterfaceBean, Serializable {
-    
+
     private Pessoa pessoa;
     private Pessoa pessoaSelecionada;
     private int CEP;
     private int idTipo;
     private boolean habilitar;
-    
+
+    private TreeNode raiz;
+    private List<Pessoa> pessoaRaiz;
+    private List<Pessoa> pessoaFilha;
+
     public PessoaBean() {
         pessoa = new Pessoa();
-        
+
         pessoa.setDataCad(dataHoje());
-        
+
         pessoaSelecionada = new Pessoa();
-        
+
         habilitar = false;
     }
 
@@ -58,41 +65,53 @@ public class PessoaBean implements InterfaceBean, Serializable {
     public int getIdTipo() {
         return idTipo;
     }
-    
+
     public void setIdTipo(int idTipo) {
         this.idTipo = idTipo;
     }
-    
+
     public Pessoa getPessoa() {
         return pessoa;
     }
-    
+
     public void setPessoa(Pessoa pessoa) {
         this.pessoa = pessoa;
     }
-    
+
     public Pessoa getPessoaSelecionada() {
         return pessoaSelecionada;
     }
-    
+
     public void setPessoaSelecionada(Pessoa pessoaSelecionada) {
         this.pessoaSelecionada = pessoaSelecionada;
     }
-    
+
     public int getCEP() {
         return CEP;
     }
-    
+
     public void setCEP(int CEP) {
         this.CEP = CEP;
     }
-    
+
     public boolean isHabilitar() {
         return habilitar;
     }
-    
+
     public void setHabilitar(boolean habilitar) {
         this.habilitar = habilitar;
+    }
+
+    public TreeNode getRaiz() {
+        return raiz;
+    }
+
+    public List<Pessoa> getPessoaRaiz() {
+        return pessoaRaiz;
+    }
+
+    public List<Pessoa> getPessoaFilha() {
+        return pessoaFilha;
     }
 //</editor-fold>
 
@@ -130,9 +149,9 @@ public class PessoaBean implements InterfaceBean, Serializable {
                 || telefone.contains("_"))) {
             String tel[] = convertVal(telefone, telefone.length());
             final int ddd = 1, tA = 2;
-            
+
             boolean valida = false;
-            
+
             if (!verificaVal(quebraVal(joinVal(tel)))) {
                 if (validaDDD(tel[ddd])) {
                     if (verPriDigito(tel[tA])) {
@@ -145,7 +164,7 @@ public class PessoaBean implements InterfaceBean, Serializable {
             } else {
                 valida = true;
             }
-            
+
             if (valida) {
                 exibirMsg("Telefone inválido");
                 return false;
@@ -162,7 +181,7 @@ public class PessoaBean implements InterfaceBean, Serializable {
      */
     private boolean validaDDD(String ddd) {
         int[] newDDD = quebraVal(ddd);
-        
+
         for (int i = 0; i < newDDD.length; i++) {
             if (newDDD[i] == 0) {
                 return false;
@@ -179,7 +198,7 @@ public class PessoaBean implements InterfaceBean, Serializable {
     private static boolean verPriDigito(String var) {
         int[] tel = quebraVal(var);
         int pD = tel[tel.length - 1];
-        
+
         return !(pD == 0 || pD == 1);
     }
 //</editor-fold>
@@ -216,13 +235,13 @@ public class PessoaBean implements InterfaceBean, Serializable {
     public boolean verificaCPF() {
         final String CPF = getPessoa().getCpf();
         if (!(CPF.equals("___.___.___-__") || CPF.contains("_"))) {
-            
+
             String[] cpf = convertVal(CPF, CPF.length());
             String newCpf = joinVal(cpf);
             int[] aryCpf = quebraVal(newCpf);
-            
+
             boolean valida = false;
-            
+
             if (!verificaVal(aryCpf)) {
                 if (validaCPF(aryCpf, 0, 1)) {
                     if (!validaCPF(aryCpf, 1, 0)) {
@@ -253,11 +272,11 @@ public class PessoaBean implements InterfaceBean, Serializable {
      */
     private boolean validaCPF(int[] cpf, int condicao, int posicao) {
         int soma = 0;
-        
+
         for (int j = 10 + condicao; j > 1; j--) {
             soma += (cpf[j - condicao] * j);
         }
-        
+
         return ((soma * 10) % 11) == cpf[posicao];
     }
 //</editor-fold>
@@ -283,7 +302,16 @@ public class PessoaBean implements InterfaceBean, Serializable {
     }
 
     /**
-     * Modifica um atributo boolean
+     * Modifica uma atributo booleano
+     *
+     * @param b
+     */
+    public void mdfHab(boolean b) {
+        setHabilitar(b);
+    }
+
+    /**
+     * Modifica um atributo boolean - reavaliar
      */
     public void modifHab() {
         if (isHabilitar()) {
@@ -292,14 +320,14 @@ public class PessoaBean implements InterfaceBean, Serializable {
             setHabilitar(true);
         }
     }
-    
+
     public void limpar() {
         pessoa.setEndereco(new Endereco());
         pessoa.setNumero(0);
         pessoa.setComplemento("");
         modifHab();
         setCEP(0);
-        
+
     }
 
     /**
@@ -309,8 +337,8 @@ public class PessoaBean implements InterfaceBean, Serializable {
      */
     public final Date dataHoje() {
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.YEAR, -2);
-        
+        cal.add(Calendar.YEAR, 0);
+
         return cal.getTime();
     }
 //</editor-fold>
@@ -343,7 +371,7 @@ public class PessoaBean implements InterfaceBean, Serializable {
      */
     private boolean verificaVal(int[] val) {
         int cont = 0;
-        
+
         for (int i = 0; i < val.length - 1; i++) {
             if (val[i] == val[i + 1]) {
                 cont++;
@@ -360,7 +388,7 @@ public class PessoaBean implements InterfaceBean, Serializable {
      */
     private String joinVal(String[] val) {
         String newVal = "";
-        
+
         for (String string : val) {
             newVal += string;
         }
@@ -376,17 +404,17 @@ public class PessoaBean implements InterfaceBean, Serializable {
     private static int[] quebraVal(String val) {
         Long i = Long.valueOf(val);
         int[] ary = new int[val.length()];
-        
+
         for (int j = 0; j < ary.length; j++) {
             ary[j] = (int) (i % 10);
-            
+
             i /= 10;
         }
         return ary;
     }
 //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Endereco">
+    //<editor-fold defaultstate="collapsed" desc="Meotodos Endereco">
     /**
      * Copia uma pagina e salva em arquivo xml
      */
@@ -394,9 +422,9 @@ public class PessoaBean implements InterfaceBean, Serializable {
         File file = new File("C:\\xtream\\endereco.xml");
         try {
             URL url = new URL("http://api.postmon.com.br/v1/cep/" + getCEP() + "?format=xml");
-            
+
             new LoadPage().getPage(url, file);
-            
+
             buscaArquivo();
         } catch (IOException ex) {
             exibirMsg("CEP não encontrado");
@@ -409,26 +437,26 @@ public class PessoaBean implements InterfaceBean, Serializable {
     private void buscaArquivo() {
         File ler = new File("C:\\xtream\\endereco.xml");
         XStream xstream = new XStream(new DomDriver());
-        
+
         xstream.alias("result", result.class);
-        
+
         result res = (result) xstream.fromXML(ler);
-        
+
         Endereco end = new Endereco();
-        
+
         end.setBairro(res.getBairro());
         end.setCep(res.getCep());
         end.setCidade(res.getCidade());
         end.setEstado(res.getEstado_info().getNome());
         end.setLogradouro(res.getLogradouro());
         end.setUf(res.getEstado());
-        
+
         pessoa.setEndereco(end);
         modifHab();
     }
 //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Override">
+    //<editor-fold defaultstate="collapsed" desc="Metodos Override">
     @Override
     public void salvar() {
         if (pessoa.getEndereco() == null) {
@@ -437,10 +465,10 @@ public class PessoaBean implements InterfaceBean, Serializable {
             try {
                 Tipo tipo;
                 TipoDAO daoT = new TipoDAO();
-                
+
                 tipo = daoT.getById(idTipo);
                 pessoa.setTipo(tipo);
-                
+
                 PessoaDAO dao = new PessoaDAO();
                 dao.save(pessoa);
             } catch (DAOException ex) {
@@ -448,12 +476,12 @@ public class PessoaBean implements InterfaceBean, Serializable {
             }
         }
     }
-    
+
     @Override
     public void atualizar() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     @Override
     public void excluir() {
         try {
@@ -463,7 +491,7 @@ public class PessoaBean implements InterfaceBean, Serializable {
             Logger.getLogger(PessoaBean.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     @Override
     public List<Pessoa> buscarTodos() {
         PessoaDAO dao = new PessoaDAO();
@@ -476,4 +504,33 @@ public class PessoaBean implements InterfaceBean, Serializable {
     }
 //</editor-fold>
 
+    //<editor-fold defaultstate="collapsed" desc="Metodos Tree">
+    public void consultar() throws DAOException {
+        PessoaDAO dao = new PessoaDAO();
+
+        pessoaRaiz = dao.getAll();
+        pessoaFilha = dao.getAllDep();
+
+        this.raiz = new DefaultTreeNode("Raiz", null);
+        adicionarNos(pessoaRaiz, this.raiz);
+    }
+
+    public void adicionarNos(List<Pessoa> pessoas, TreeNode pai) throws DAOException {
+        List<Pessoa> lista;
+
+        for (Pessoa p : pessoas) {
+            lista = new ArrayList<>();
+            TreeNode no = new DefaultTreeNode(p, pai);
+
+            for (int i = 0; i < pessoaFilha.size(); i++) {
+                if (pessoaFilha.get(i).getResponsavel().getId_pessoa() == p.getId_pessoa()) {
+                    lista.add(pessoaFilha.get(i));
+                }
+            }
+            if (!lista.isEmpty()) {
+                adicionarNos(lista, no);
+            }
+        }
+    }
+//</editor-fold>
 }

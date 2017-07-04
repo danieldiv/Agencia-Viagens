@@ -89,8 +89,6 @@ public class PessoaDAO implements InterfaceDAO<Pessoa> {
                 + "cpf = ?, rg = ?, email = ?, sexo = ?, numero = ?, "
                 + "complemento = ?, dataNasc = ?, dataCad = ?, estCivil = ?, "
                 + "telFixo = ?, telCelular = ? WHERE id_tipo = ?";
-//        String sql = "UPDATE usuario SET usuario = ?, email = ?, cpf = ?, "
-//                + "senha = ? WHERE id_usuario = ?";
 
         try (Connection conn = geraConexao();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -145,14 +143,17 @@ public class PessoaDAO implements InterfaceDAO<Pessoa> {
         EnderecoDAO daoE = new EnderecoDAO();
         TipoDAO daoT = new TipoDAO();
 
-        String sql = "SELECT * FROM pessoa";
+        String sql = "SELECT * FROM pessoa WHERE responsavel is null";
 
         try (Connection conn = geraConexao();
                 PreparedStatement ps = conn.prepareStatement(sql);
                 ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
+                Pessoa responsavel = null;
+
                 int id_pessoa = rs.getInt("id_pessoa");
+                int id_responsavel = rs.getInt("responsavel");
                 String nome = rs.getString("nome");
                 String cpf = rs.getString("cpf");
                 String rg = rs.getString("rg");
@@ -166,14 +167,72 @@ public class PessoaDAO implements InterfaceDAO<Pessoa> {
                 String telFixo = rs.getString("telFixo");
                 String telCelular = rs.getString("telCelular");
 
+                if (id_responsavel != 0) {
+                    responsavel = getById(id_responsavel);
+                }
+
                 cpf = montarCpf(cpf);
-//                String newSexo = montarSexo(sexo);
-                estCivil = montarEstCivil(estCivil);
 
                 endereco = daoE.getById(rs.getInt("cep"));
                 tipo = daoT.getById(rs.getInt("id_tipo"));
 
-                lista.add(new Pessoa(id_pessoa, endereco, tipo, nome, cpf, rg, email, sexo, numero, complemento, dataNasc, dataCad, estCivil, telFixo, telCelular));
+                lista.add(new Pessoa(id_pessoa, endereco, tipo, nome, cpf, rg, email, sexo, numero, complemento, dataNasc, dataCad, estCivil, telFixo, telCelular, responsavel));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(PessoaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return lista;
+    }
+
+    /**
+     * Busca todos os dependente
+     *
+     * @return
+     * @throws DAOException
+     */
+    public List<Pessoa> getAllDep() throws DAOException {
+        List<Pessoa> lista = new ArrayList<>();
+        Endereco endereco;
+        Tipo tipo;
+
+        EnderecoDAO daoE = new EnderecoDAO();
+        TipoDAO daoT = new TipoDAO();
+
+        String sql = "SELECT * FROM pessoa WHERE responsavel is not null";
+
+        try (Connection conn = geraConexao();
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Pessoa responsavel = null;
+
+                int id_pessoa = rs.getInt("id_pessoa");
+                int id_responsavel = rs.getInt("responsavel");
+                String nome = rs.getString("nome");
+                String cpf = rs.getString("cpf");
+                String rg = rs.getString("rg");
+                String email = rs.getString("email");
+                boolean sexo = rs.getBoolean("sexo");
+                int numero = rs.getInt("numero");
+                String complemento = rs.getString("complemento");
+                Date dataNasc = rs.getDate("dataNasc");
+                Date dataCad = rs.getDate("dataCad");
+                String estCivil = rs.getString("estCivil");
+                String telFixo = rs.getString("telFixo");
+                String telCelular = rs.getString("telCelular");
+
+                if (id_responsavel != 0) {
+                    responsavel = getById(id_responsavel);
+                }
+
+                cpf = montarCpf(cpf);
+
+                endereco = daoE.getById(rs.getInt("cep"));
+                tipo = daoT.getById(rs.getInt("id_tipo"));
+
+                lista.add(new Pessoa(id_pessoa, endereco, tipo, nome, cpf, rg, email, sexo, numero, complemento, dataNasc, dataCad, estCivil, telFixo, telCelular, responsavel));
             }
         } catch (SQLException ex) {
             Logger.getLogger(PessoaDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -199,7 +258,10 @@ public class PessoaDAO implements InterfaceDAO<Pessoa> {
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
+                    Pessoa responsavel = null;
+
                     int id_pessoa = rs.getInt("id_pessoa");
+                    int id_responsavel = rs.getInt("responsavel");
                     String nome = rs.getString("nome");
                     String cpf = rs.getString("cpf");
                     String rg = rs.getString("rg");
@@ -213,14 +275,16 @@ public class PessoaDAO implements InterfaceDAO<Pessoa> {
                     String telFixo = rs.getString("telFixo");
                     String telCelular = rs.getString("telCelular");
 
+                    if (id_responsavel != 0) {
+                        responsavel = getById(id_responsavel);
+                    }
+
                     cpf = montarCpf(cpf);
-//                    String newSexo = montarSexo(sexo);
-                    estCivil = montarEstCivil(estCivil);
 
                     endereco = daoE.getById(rs.getInt("cep"));
                     tipo = daoT.getById(rs.getInt("id_tipo"));
 
-                    pessoa = new Pessoa(id_pessoa, endereco, tipo, nome, cpf, rg, email, sexo, numero, complemento, dataNasc, dataCad, estCivil, telFixo, telCelular);
+                    pessoa = new Pessoa(id_pessoa, endereco, tipo, nome, cpf, rg, email, sexo, numero, complemento, dataNasc, dataCad, estCivil, telFixo, telCelular, responsavel);
                 }
             }
         } catch (SQLException ex) {
@@ -245,28 +309,5 @@ public class PessoaDAO implements InterfaceDAO<Pessoa> {
             newCpf += string;
         }
         return newCpf;
-    }
-
-    private String montarSexo(boolean sexo) {
-        if (sexo) {
-            return "Masculino";
-        } else {
-            return "Feminino";
-        }
-    }
-
-    private String montarEstCivil(String stCivil) {
-        switch (stCivil) {
-            case "st":
-                return "Solteiro";
-            case "cd":
-                return "Casado";
-            case "sp":
-                return "Separado";
-            case "dv":
-                return "Divorciado";
-            default:
-                return "Viuvo";
-        }
     }
 }

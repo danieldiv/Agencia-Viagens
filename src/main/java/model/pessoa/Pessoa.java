@@ -15,6 +15,7 @@ import java.util.Date;
 public class Pessoa implements Serializable {
 
     private int id_pessoa;
+    private Pessoa responsavel;
     private Endereco endereco;
     private Tipo tipo;
     private String nome;
@@ -22,7 +23,6 @@ public class Pessoa implements Serializable {
     private String rg;
     private String email;
     private boolean sexo;
-    private String newSexo;
     private int numero;
     private String complemento;
     private Date dataNasc;
@@ -34,7 +34,7 @@ public class Pessoa implements Serializable {
     public Pessoa() {
     }
 
-    public Pessoa(Endereco endereco, Tipo tipo, String nome, String cpf, String rg, String email, boolean sexo, int numero, String complemento, Date dataNasc, Date dataCad, String estCivil, String telFixo, String telCelular) {
+    public Pessoa(Endereco endereco, Tipo tipo, String nome, String cpf, String rg, String email, boolean sexo, int numero, String complemento, Date dataNasc, Date dataCad, String estCivil, String telFixo, String telCelular, Pessoa responsavel) {
         this.endereco = endereco;
         this.tipo = tipo;
         this.nome = nome;
@@ -49,15 +49,10 @@ public class Pessoa implements Serializable {
         this.estCivil = estCivil;
         this.telFixo = telFixo;
         this.telCelular = telCelular;
+        this.responsavel = responsavel;
     }
 
-    public Pessoa(int id_pessoa, Endereco endereco, Tipo tipo, String nome, String cpf, String rg, String email, boolean sexo, int numero, String complemento, Date dataNasc, Date dataCad, String estCivil, String telFixo, String telCelular) {
-        if (sexo) {
-            this.newSexo = "Feminino";
-        } else {
-            this.newSexo = "Masculino";
-        }
-
+    public Pessoa(int id_pessoa, Endereco endereco, Tipo tipo, String nome, String cpf, String rg, String email, boolean sexo, int numero, String complemento, Date dataNasc, Date dataCad, String estCivil, String telFixo, String telCelular, Pessoa responsavel) {
         this.id_pessoa = id_pessoa;
         this.endereco = endereco;
         this.tipo = tipo;
@@ -73,10 +68,7 @@ public class Pessoa implements Serializable {
         this.estCivil = estCivil;
         this.telFixo = telFixo;
         this.telCelular = telCelular;
-    }
-
-    public String getNewSexo() {
-        return newSexo;
+        this.responsavel = responsavel;
     }
 
     public int getId_pessoa() {
@@ -199,6 +191,14 @@ public class Pessoa implements Serializable {
         this.telCelular = telCelular;
     }
 
+    public Pessoa getResponsavel() {
+        return responsavel;
+    }
+
+    public void setResponsavel(Pessoa responsavel) {
+        this.responsavel = responsavel;
+    }
+
     @Override
     public int hashCode() {
         int hash = 5;
@@ -226,7 +226,7 @@ public class Pessoa implements Serializable {
 
     @Override
     public String toString() {
-        return "Pessoa{" + "id_pessoa=" + id_pessoa + ", endereco=" + endereco + ", tipo=" + tipo + ", nome=" + nome + ", cpf=" + cpf + ", rg=" + rg + ", email=" + email + ", sexo=" + sexo + ", numero=" + numero + ", complemento=" + complemento + ", dataNasc=" + dataNasc + ", dataCad=" + dataCad + ", estCivil=" + estCivil + ", telFixo=" + telFixo + ", telCelular=" + telCelular + '}';
+        return "Pessoa{" + "id_pessoa=" + id_pessoa + ", responsavel=" + responsavel + ", endereco=" + endereco + ", tipo=" + tipo + ", nome=" + nome + ", cpf=" + cpf + ", rg=" + rg + ", email=" + email + ", sexo=" + sexo + ", numero=" + numero + ", complemento=" + complemento + ", dataNasc=" + dataNasc + ", dataCad=" + dataCad + ", estCivil=" + estCivil + ", telFixo=" + telFixo + ", telCelular=" + telCelular + '}';
     }
 
 }

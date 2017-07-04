@@ -6,6 +6,7 @@
 package dao.control.pessoa;
 
 import dao.model.DAOException;
+import java.util.List;
 import model.pessoa.Pessoa;
 
 /**
@@ -20,8 +21,17 @@ public class NovoMain {
      */
     public static void main(String[] args) throws DAOException {
         PessoaDAO dao = new PessoaDAO();
-        System.out.println(dao.getById(4));
+
+        List<Pessoa> l = dao.getAll();
+
+        for (Pessoa pessoa : l) {
+            System.out.println(pessoa);
+        }
+
     }
 
+    public static boolean vriResponsavel(Pessoa pessoa) {
+        return pessoa.getResponsavel() == null;
+    }
 
 }
