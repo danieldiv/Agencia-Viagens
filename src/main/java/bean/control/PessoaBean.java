@@ -292,6 +292,12 @@ public class PessoaBean implements InterfaceBean, Serializable {
                 new FacesMessage(FacesMessage.SEVERITY_WARN, msg, null));
     }
 
+    private void msgSucesso(Pessoa pessoa) {
+        FacesContext.getCurrentInstance().addMessage(null,
+                new FacesMessage(FacesMessage.SEVERITY_INFO,
+                        pessoa.getTipo().getNome() + "foi salvo com sucesso", null));
+    }
+
     /**
      * Retorna um boolean para habilitar e desabilitar botoes e inputs
      *
@@ -471,6 +477,8 @@ public class PessoaBean implements InterfaceBean, Serializable {
 
                 PessoaDAO dao = new PessoaDAO();
                 dao.save(pessoa);
+
+                msgSucesso(pessoa);
             } catch (DAOException ex) {
                 Logger.getLogger(PessoaBean.class.getName()).log(Level.SEVERE, null, ex);
             }

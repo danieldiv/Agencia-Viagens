@@ -6,9 +6,7 @@
                 template="/templates/layout.xhtml">
 
     <ui:define name="content">
-        <h1 class="aw-page-title">Pessoa(s)</h1>
-
-        <p:messages id="msgCPF" autoUpdate="false" />
+        <h1 class="aw-page-title">Pessoa</h1>
 
         <h:form id="frm">
             <!--<h:form id="frm" onkeypress="return event.keyCode !== 13">-->
@@ -16,11 +14,11 @@
 
             <p:toolbar>
                 <p:toolbarGroup>
-                    <p:commandButton value="Salvar" action="#{pessoaBean.salvar()}" update="@form"/>
-                    <p:button value="Cancelar" outcome="/pages/pessoaPesquisa"/>
+                    <p:commandButton value="Salvar" actionListener="#{pessoaBean.salvar()}" update="@form" 
+                                     action="pessoaPesquisa.xhtml?faces-redirect=true"/>
+                    <p:button value="Cancelar" outcome="/pages/pessoa/pessoaPesquisa"/>
                 </p:toolbarGroup>
             </p:toolbar>
-
 
             <p:messages id="msgPadrao" autoUpdate="false" />
 
