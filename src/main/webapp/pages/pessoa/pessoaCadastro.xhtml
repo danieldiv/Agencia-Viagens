@@ -34,7 +34,7 @@
                     </p:inputText>
 
                     <p:outputLabel value="CPF" for="cpf"/>
-                    <p:inputMask id="cpf" mask="999.999.999-99" value="#{pessoaBean.pessoa.cpf}" 
+                    <p:inputMask id="cpf" mask="99999999999" value="#{pessoaBean.pessoa.cpf}" 
                                  required="true">
                         <p:ajax event="blur" listener="#{pessoaBean.verificaCPF()}" update="msgPadrao"/>
                     </p:inputMask>
@@ -57,7 +57,7 @@
                                 locale="pt" pattern="dd/MM/yyyy" mask="true" navigator="true"/>
 
                     <p:outputLabel value="Data Cadastro" for="dataCad"/>
-                    <p:calendar id="dataCad" value="#{pessoaBean.pessoa.dataCad}" pattern="dd/MM/yyyy" disabled="true"/>
+                    <p:calendar id="dataCad" value="#{pessoaBean.pessoa.dataCad}" pattern="dd/MM/yyyy HH:mm:ss" disabled="true"/>
 
                     <p:outputLabel value="Telefone Fixo" for="telFixo"/>
                     <p:inputMask id="telFixo" value="#{pessoaBean.pessoa.telFixo}" mask="(99)9999-9999">
@@ -89,6 +89,8 @@
                                        itemLabel="#{t.nome}" itemValue="#{t.id_tipo}"/>
                     </p:selectOneMenu>
 
+
+
                 </p:panelGrid>
 
             </div>
@@ -97,6 +99,8 @@
                              process="@this" update="itemPanel">
                 <p:resetInput target="itemPanel"/>
             </p:commandButton>
+
+
 
             <p:dialog widgetVar="endDlg" header="Endereço" resizable="false"
                       closeOnEscape="true" responsive="true" modal="true"
@@ -152,6 +156,12 @@
                                          id="pesquisar" disabled="#{pessoaBean.btnVisible()}"
                                          process="itemPanel" action="#{pessoaBean.salvarArquivo()}">
                         </p:commandButton>
+                        
+                        <p:outputLabel/>
+                        <p:commandButton value="Não informar" update="itemPanel" 
+                                         id="endNull" disabled="#{pessoaBean.btnVisible()}" process="itemPanel" 
+                                         action="#{pessoaBean.novoEndereco()}" actionListener="#{pessoaBean.modifHab()}">
+                        </p:commandButton>
 
                         <p:outputLabel/>
                         <p:commandButton value="Limpar" update="itemPanel" 
@@ -162,8 +172,6 @@
                         <p:commandButton value="Sair" update="itemPanel" process="itemPanel" 
                                          id="adicionar" disabled="#{!pessoaBean.btnVisible()}"
                                          oncomplete="if (!args.validationFailed) PF('endDlg').hide()"/>
-
-
                     </p:panelGrid>
 
                 </h:panelGroup>

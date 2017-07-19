@@ -234,11 +234,16 @@ public class PessoaBean implements InterfaceBean, Serializable {
      */
     public boolean verificaCPF() {
         final String CPF = getPessoa().getCpf();
-        if (!(CPF.equals("___.___.___-__") || CPF.contains("_"))) {
+        if (!(CPF.contains("_"))) {
 
-            String[] cpf = convertVal(CPF, CPF.length());
-            String newCpf = joinVal(cpf);
-            int[] aryCpf = quebraVal(newCpf);
+//            String[] cpf = convertVal(CPF, CPF.length());
+//            String newCpf = joinVal(cpf);
+//            int[] aryCpf = quebraVal(newCpf);
+            int[] aryCpf = quebraVal(CPF);
+//
+//            for (int i : aryCpf) {
+//                System.out.print(i);
+//            }
 
             boolean valida = false;
 
@@ -257,7 +262,7 @@ public class PessoaBean implements InterfaceBean, Serializable {
                 exibirMsg("CPF inválido");
                 return false;
             }
-            pessoa.setCpf(newCpf);
+//            pessoa.setCpf(newCpf);
         }
         return true;
     }
@@ -420,7 +425,7 @@ public class PessoaBean implements InterfaceBean, Serializable {
     }
 //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Meotodos Endereco">
+    //<editor-fold defaultstate="collapsed" desc="Metodos Endereco">
     /**
      * Copia uma pagina e salva em arquivo xml
      */
@@ -460,6 +465,14 @@ public class PessoaBean implements InterfaceBean, Serializable {
         pessoa.setEndereco(end);
         modifHab();
     }
+
+    /**
+     * Adiciona um endereço nulo
+     */
+    public void novoEndereco() {
+        pessoa.setEndereco(new Endereco());
+        System.out.println(pessoa.getEndereco());
+    }
 //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Metodos Override">
@@ -467,7 +480,8 @@ public class PessoaBean implements InterfaceBean, Serializable {
     public void salvar() {
         if (pessoa.getEndereco() == null) {
             exibirMsg("Endereço não informado");
-        } else if (verificaCPF() && verificaTel(pessoa.getTelCelular())) {
+        } 
+        if (verificaCPF() && verificaTel(pessoa.getTelCelular())) {
             try {
                 Tipo tipo;
                 TipoDAO daoT = new TipoDAO();
@@ -487,7 +501,12 @@ public class PessoaBean implements InterfaceBean, Serializable {
 
     @Override
     public void atualizar() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        PessoaDAO dao = new PessoaDAO();
+        try {
+            dao.update(pessoaSelecionada);
+        } catch (DAOException ex) {
+            Logger.getLogger(PessoaBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override

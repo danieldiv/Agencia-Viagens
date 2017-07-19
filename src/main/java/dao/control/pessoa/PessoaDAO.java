@@ -137,13 +137,14 @@ public class PessoaDAO implements InterfaceDAO<Pessoa> {
     @Override
     public List<Pessoa> getAll() throws DAOException {
         List<Pessoa> lista = new ArrayList<>();
-        Endereco endereco;
-        Tipo tipo;
+        Endereco endereco = new Endereco();
+        Tipo tipo = new Tipo();
 
         EnderecoDAO daoE = new EnderecoDAO();
         TipoDAO daoT = new TipoDAO();
 
-        String sql = "SELECT * FROM pessoa WHERE responsavel is null";
+        String sql = "SELECT * FROM pessoa";
+//        String sql = "SELECT * FROM pessoa WHERE responsavel is null";
 
         try (Connection conn = geraConexao();
                 PreparedStatement ps = conn.prepareStatement(sql);
@@ -174,6 +175,7 @@ public class PessoaDAO implements InterfaceDAO<Pessoa> {
                 cpf = montarCpf(cpf);
 
                 endereco = daoE.getById(rs.getInt("cep"));
+
                 tipo = daoT.getById(rs.getInt("id_tipo"));
 
                 lista.add(new Pessoa(id_pessoa, endereco, tipo, nome, cpf, rg, email, sexo, numero, complemento, dataNasc, dataCad, estCivil, telFixo, telCelular, responsavel));

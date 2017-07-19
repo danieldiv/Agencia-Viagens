@@ -1,0 +1,25 @@
+PESSOA CADASTRO
+
+* O botao salvar não salva quando tiver alguma pendencia, mas retorna a pagina 
+principal se todos os campos obrigatorios estiverem preenchidos, mesmo
+estando errados
+
+Solucao
+
+Rezetar input para que apareca o erro de campo obrigatorio
+
+* Deixar o preenchimento do campo de endereco em branco
+
+Talvez no momento do cadatro nao tenho estas informacoes
+
+Solucao
+
+Criar um alerta informando que o usuario nao possui endereco vinculado
+Um campo mensagem com todas as informações
+
+* Modificar o campo CPF
+
+O campo esta com mascar, retirar para melhor manuseio com o banco
+
+
+

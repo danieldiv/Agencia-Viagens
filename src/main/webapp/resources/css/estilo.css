@@ -8,3 +8,11 @@ and open the template in the editor.
     Author     : Daniel
 */
 
+.ativa{
+    background: linear-gradient(#33cc00, #339900);
+}
+
+.ativa > span{
+    color: white;
+    /*border-left: solid;*/
+}
