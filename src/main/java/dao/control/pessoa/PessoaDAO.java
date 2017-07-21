@@ -143,8 +143,8 @@ public class PessoaDAO implements InterfaceDAO<Pessoa> {
         EnderecoDAO daoE = new EnderecoDAO();
         TipoDAO daoT = new TipoDAO();
 
-        String sql = "SELECT * FROM pessoa";
-//        String sql = "SELECT * FROM pessoa WHERE responsavel is null";
+//        String sql = "SELECT * FROM pessoa";
+        String sql = "SELECT * FROM pessoa WHERE responsavel is null";
 
         try (Connection conn = geraConexao();
                 PreparedStatement ps = conn.prepareStatement(sql);

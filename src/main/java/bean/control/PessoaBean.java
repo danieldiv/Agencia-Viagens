@@ -23,9 +23,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.faces.application.Application;
 import javax.faces.application.FacesMessage;
+import javax.faces.application.ViewHandler;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import model.pessoa.Endereco;
 import model.pessoa.Pessoa;
@@ -48,6 +51,7 @@ public class PessoaBean implements InterfaceBean, Serializable {
     private boolean habilitar;
 
     private TreeNode raiz;
+    private TreeNode selectedItem;
     private List<Pessoa> pessoaRaiz;
     private List<Pessoa> pessoaFilha;
 
@@ -62,6 +66,14 @@ public class PessoaBean implements InterfaceBean, Serializable {
     }
 
     //<editor-fold defaultstate="collapsed" desc="Getters e Setters">
+    public TreeNode getSelectedItem() {
+        return selectedItem;
+    }
+
+    public void setSelectedItem(TreeNode selectedItem) {
+        this.selectedItem = selectedItem;
+    }
+
     public int getIdTipo() {
         return idTipo;
     }
@@ -480,7 +492,7 @@ public class PessoaBean implements InterfaceBean, Serializable {
     public void salvar() {
         if (pessoa.getEndereco() == null) {
             exibirMsg("Endereço não informado");
-        } 
+        }
         if (verificaCPF() && verificaTel(pessoa.getTelCelular())) {
             try {
                 Tipo tipo;
@@ -560,4 +572,5 @@ public class PessoaBean implements InterfaceBean, Serializable {
         }
     }
 //</editor-fold>
+    
 }

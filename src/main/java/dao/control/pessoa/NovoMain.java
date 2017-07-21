@@ -20,13 +20,15 @@ public class NovoMain {
      * @throws dao.model.DAOException
      */
     public static void main(String[] args) throws DAOException {
-        PessoaDAO dao = new PessoaDAO();
-
-        List<Pessoa> l = dao.getAll();
-
-        for (Pessoa pessoa : l) {
-            System.out.println(pessoa);
-        }
+        PessDAO dao = new PessDAO();
+        System.out.println(dao.getAll());
+//        PessoaDAO dao = new PessoaDAO();
+//
+//        List<Pessoa> l = dao.getAll();
+//
+//        for (Pessoa pessoa : l) {
+//            System.out.println(pessoa);
+//        }
 
     }
 

@@ -9,191 +9,71 @@
         <h1 class="aw-page-title">Pessoa(s)</h1>
 
         <h:form id="frm">
-            <!--            <f:metadata>
-                            <f:viewAction action="{pessoaBean.consultar()}"/>
-                        </f:metadata>-->
+            <f:metadata>
+                <f:viewAction action="#{pessBean.consultar()}"/>
+            </f:metadata>
 
-            <p:toolbar>
-                <p:toolbarGroup>
-                    <p:button value="Novo" outcome="/pages/pessoa/pessoaCadastro.xhtml"/>
-                </p:toolbarGroup>
-            </p:toolbar>
-            <br/>
 
-            <!--<p:treeTable value="{pessoaBean.raiz}" var="pessoas" emptyMessage="Nenhum dado encontrado" widgetVar="psTable"-->
-            <p:dataTable value="#{pessoaBean.buscarTodos()}" var="pessoas" emptyMessage="Nenhum dado encontrado" widgetVar="psTable"
-                         reflow="true" paginator="true" rows="10">
+            <p:treeTable value="#{pessBean.raiz}" var="tree" id="treeDoc"
+                         selectionMode="single" selection="#{pessBean.selectedItem}"
+                         emptyMessage="Nenhum dado encontrado">
 
                 <p:column headerText="Nome">
-                    <p:outputLabel value="#{pessoas.nome}"/>
+                    <p:outputLabel value="#{tree.nome}"/>
                 </p:column>
 
-                <p:column headerText="Cpf" style="text-align: center; width: 12%">
-                    <p:outputLabel value="#{pessoas.cpf}"/>
-                </p:column>
-
-                <!--                <p:column headerText="Tipo" style="width: 10%">
-                                    <p:outputLabel value="#{pessoas.tipo.nome}"/>
-                                </p:column>-->
-
-                <p:column filterBy="#{pessoas.tipo.nome}" filterMatchMode="equals" 
-                          style="width: 21%" footerText="Tipo">
-                    <f:facet name="filter">
-                        <p:selectOneButton onchange="PF('psTable').filter()">
-                            <f:selectItem itemLabel="T" itemValue=""/>
-                            <f:selectItem itemLabel="P" itemValue="Passageiro"/>
-                            <f:selectItem itemLabel="D" itemValue="Dependente"/>
-                            <f:selectItem itemLabel="M" itemValue="Motorista"/>
-                            <f:selectItem itemLabel="G" itemValue="Guia"/>
-                        </p:selectOneButton>
-                    </f:facet>
-                    <p:outputLabel value="#{pessoas.tipo.nome}"/>
-                </p:column>
-
-                <p:column headerText="Info." style="width: 6%; text-align: center">
-                    <p:commandButton icon="ui-icon ui-icon-search" oncomplete="PF('infDlg').show()" update="frm" action="#{pessoaBean.mdfHab(false)}">
-                        <f:setPropertyActionListener target="#{pessoaBean.pessoaSelecionada}" value="#{pessoas}"/>
-                    </p:commandButton>
-                </p:column>
-
-                <p:column headerText="Excluir" style="width: 6%; text-align: center">
-                    <p:commandButton icon="ui-icon ui-icon-close" action="#{pessoaBean.excluir()}" update="@all">
-                        <f:setPropertyActionListener target="#{pessoaBean.pessoaSelecionada}" value="#{pessoas}"/>
-                        <p:confirm header="Confirmação" icon="ui-icon-alert" message="Deseja excluir o(a) #{pessoas.tipo} #{pessoas.nome}?"/>
-                    </p:commandButton>
-
-                    <p:confirmDialog global="true">
-                        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" update="@all"/>
-                        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
-                    </p:confirmDialog>
-                </p:column>
-
-                <!--
-                Operadores Relacioanais == , eq , =! , Ne , < , lt , > , gt , <= , GE , > = , le
-                
-                O rendered deixa visivel ou oculto (true para tornar visivel e false para ocultar)
-                
-                Verificando se responvel é igual a nulo, se for true, será possivel adicionar um dependente
+                <!--o primeiro fa sem ele o icone nao aparece
+    o segundo fa é uma classe que coloca espaço dos lados
+    o terceiro fa é o icone
                 -->
 
-<!--                <p:column headerText="Dep." style="width: 6%; text-align: center">
-                    <p:button icon="ui-icon ui-icon-plus" rendered="#{pessoas.responsavel eq null}"/>
-                </p:column>-->
+                <f:facet name="footer">
+                    <p:commandButton icon="fa fa-fw fa-search" update="frm"
+                                     oncomplete="PF('dialogSingle').show()">
+                    </p:commandButton>
+                    <p:commandButton icon="fa fa-fw fa-pencil" update="frm"
+                                     oncomplete="PF('dialogSingle').show()">
+                    </p:commandButton>
 
-            </p:dataTable>
+                    <p:commandButton icon="fa fa-fw fa-remove" update="treeDoc" action="#{pessBean.excluir()}">
+                        <f:setPropertyActionListener target="#{pessBean.pessoaSelecionada}" value="#{pessBean.selectedItem.data}"/>
+                        <p:confirm header="Confirmação" icon="ui-icon-alert" message="Deseja excluir?"/>
+                    </p:commandButton>
 
-            <p:dialog widgetVar="infDlg" header="Mais Informações" resizable="false" closeOnEscape="true"
-                      responsive="true" modal="true" draggable="false">
+                    <p:confirmDialog global="true" hideEffect="fold">
+                        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes"  
+                                         icon="ui-icon-check" update="@all"/>
+                        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </p:confirmDialog>
+                </f:facet>
+            </p:treeTable>
 
-                <h:panelGroup layout="block" styleClass="ui-fluid" id="infoPanel">
+            <p:dialog id="dialog" header="#{pessBean.selectedItem.data.nome}" widgetVar="dialogSingle" resizable="false"
+                      width="400" showEffect="clip" hideEffect="fold" closeOnEscape="true">
+                <p:outputPanel id="displaySingle">
+                    <h:panelGrid columns="4" cellpadding="4">                    
+                        <p:outputLabel value="CPF:" class="dialogTree"/>
+                        <p:outputLabel value="#{pessBean.selectedItem.data.cpf}" />
 
-                    <p:tabView>
-                        <p:tab title="Dados Pessoais">
+                        <p:outputLabel value="Data Nascimento:" class="dialogTree"/>
+                        <p:outputLabel value="#{pessBean.selectedItem.data.dataNasc}" />
 
-                            <p:panelGrid columns="2" layout="grid" styleClass="panelgrid-noborder" columnClasses="ui-grid-col-2, ui-grid-col-10">
+                        <p:outputLabel value="RG:" class="dialogTree"/>
+                        <p:outputLabel value="#{pessBean.selectedItem.data.rg}" />
 
-                                <p:outputLabel value="Nome"/>
-                                <p:inputText disabled="#{!pessoaBean.btnVisible()}" value="#{pessoaBean.pessoaSelecionada.nome}"/>             
-                            </p:panelGrid>
+                        <p:outputLabel value="Data Cadastro:" class="dialogTree"/>
+                        <p:outputLabel value="#{pessBean.selectedItem.data.dataCad}" />
+                    </h:panelGrid>
+                    <h:panelGrid columns="2" cellpadding="4" rendered="#{pessBean.selectedItem.data.responsavel ne null}">
+                        <p:outputLabel value="Responsavel:" class="dialogTree"/>
+                        <p:outputLabel value="#{pessBean.selectedItem.data.responsavel.nome}" />
 
-                            <p:panelGrid columns="4" layout="grid" styleClass="panelgrid-noborder" 
-                                         columnClasses="ui-grid-col-4, ui-grid-col-8, ui-grid-col-4, ui-grid-col-8">
-
-                                <p:outputLabel value="CPF"/>
-                                <p:inputText disabled="#{!pessoaBean.btnVisible()}" value="#{pessoaBean.pessoaSelecionada.cpf}"/>
-
-                                <p:outputLabel value="RG"/>
-                                <p:inputText disabled="#{!pessoaBean.btnVisible()}" value="#{pessoaBean.pessoaSelecionada.rg}"/>
-
-                                <p:outputLabel value="Email"/>
-                                <p:inputText disabled="#{!pessoaBean.btnVisible()}" value="#{pessoaBean.pessoaSelecionada.email}"/>
-                                
-                                <p:outputLabel value="Sexo" for="sexo"/>
-                                <p:selectOneMenu id="sexo" value="#{pessoaBean.pessoaSelecionada.sexo}" disabled="#{!pessoaBean.btnVisible()}">
-                                    <f:selectItem itemLabel="Masculino" itemValue="false"/>
-                                    <f:selectItem itemLabel="Feminino" itemValue="true"/>
-                                </p:selectOneMenu>
-
-                                
-                               
-                                <p:outputLabel value="Data Nasc."/>
-                                <p:calendar disabled="#{!pessoaBean.btnVisible()}" value="#{pessoaBean.pessoaSelecionada.dataNasc}"
-                                            locale="pt" pattern="dd/MM/yyyy" mask="true" maxdate="#{pessoaBean.pessoaSelecionada.dataCad}"/>
-
-                                <p:outputLabel value="Data Cad."/>
-                                <p:calendar disabled="true" value="#{pessoaBean.pessoaSelecionada.dataCad}" pattern="dd/MM/yyyy"/>
-                                
-                                <p:outputLabel value="Estado Civil"/>
-                                <p:selectOneMenu value="#{pessoaBean.pessoaSelecionada.estCivil}" disabled="#{!pessoaBean.btnVisible()}">
-                                    <f:selectItem itemLabel="Solteiro(a)" itemValue="st" />
-                                    <f:selectItem itemLabel="Casado(a)" itemValue="cd"/>
-                                    <f:selectItem itemLabel="Separado(a)" itemValue="sp"/>
-                                    <f:selectItem itemLabel="Divorciado(a)" itemValue="dv"/>
-                                    <f:selectItem itemLabel="Viuvo(a)" itemValue="vu"/>
-                                </p:selectOneMenu>
-
-                                <p:outputLabel value="Tel. Fixo"/>
-                                <p:inputText disabled="#{!pessoaBean.btnVisible()}" value="#{pessoaBean.pessoaSelecionada.telFixo}"/>
-
-                                <p:outputLabel value="Tel. Celular"/>
-                                <p:inputText disabled="#{!pessoaBean.btnVisible()}" value="#{pessoaBean.pessoaSelecionada.telCelular}"/>
-
-                                <p:outputLabel value="Tipo"/>
-                                <p:inputText disabled="true" value="#{pessoaBean.pessoaSelecionada.tipo.nome}"/>
-                            </p:panelGrid>
-
-                            <p:panelGrid columns="2" layout="grid" styleClass="panelgrid-noborder" columnClasses="ui-grid-col-2, ui-grid-col-10">
-
-                                <p:outputLabel value="Responsavel" rendered="#{pessoaBean.pessoaSelecionada.tipo.nome eq 'Dependente'}"/>
-                                <p:inputText disabled="true" value="#{pessoaBean.pessoaSelecionada.responsavel.nome}" 
-                                             rendered="#{pessoaBean.pessoaSelecionada.tipo.nome eq 'Dependente'}"/>
-                            </p:panelGrid>
-
-                            <p:panelGrid columns="2" layout="grid" styleClass="panelgrid-noborder" columnClasses="ui-grid-col-6 ui-grid-col-6">
-
-                                <p:commandButton value="Editar" disabled="#{pessoaBean.btnVisible()}"
-                                                 action="#{pessoaBean.modifHab()}" update=":frm:infoPanel"/>
-
-                                <p:commandButton value="Salvar" disabled="#{!pessoaBean.btnVisible()}"
-                                                 action="#{pessoaBean.modifHab()}" actionListener="#{pessoaBean.atualizar()}" update=":frm:infoPanel"/>
-
-                            </p:panelGrid>
-                        </p:tab>
-                        <p:tab title="Endereço">
-                            <p:panelGrid columns="2" layout="grid" styleClass="panelgrid-noborder" columnClasses="ui-grid-col-4, ui-grid-col-8">
-
-                                <p:outputLabel value="CEP"/>
-                                <p:inputText disabled="true" value="#{pessoaBean.pessoaSelecionada.endereco.cep}"/>
-
-                                <p:outputLabel value="Numero"/>
-                                <p:inputText disabled="true" value="#{pessoaBean.pessoaSelecionada.numero}"/>
-
-                                <p:outputLabel value="Complemento"/>
-                                <p:inputText disabled="true" value="#{pessoaBean.pessoaSelecionada.complemento}"/>
-
-                                <p:outputLabel value="Logradouro"/>
-                                <p:inputText disabled="true" value="#{pessoaBean.pessoaSelecionada.endereco.logradouro}"/>
-
-                                <p:outputLabel value="Bairro"/>
-                                <p:inputText disabled="true" value="#{pessoaBean.pessoaSelecionada.endereco.bairro}"/>
-
-                                <p:outputLabel value="Cidade"/>
-                                <p:inputText disabled="true" value="#{pessoaBean.pessoaSelecionada.endereco.cidade}"/>
-
-                                <p:outputLabel value="Estado"/>
-                                <p:inputText disabled="true" value="#{pessoaBean.pessoaSelecionada.endereco.estado}"/>
-
-                                <p:outputLabel value="UF"/>
-                                <p:inputText disabled="true" value="#{pessoaBean.pessoaSelecionada.endereco.uf}"/>
-
-                            </p:panelGrid>
-                        </p:tab>
-                    </p:tabView>
-
-                </h:panelGroup>
+                        <p:outputLabel value="Certidão:" class="dialogTree"/>
+                        <p:outputLabel value="#{pessBean.selectedItem.data.responsavel.nome}" />
+                    </h:panelGrid>
+                </p:outputPanel>
             </p:dialog>
         </h:form>
 
     </ui:define>
-
 </ui:composition>
