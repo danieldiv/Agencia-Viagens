@@ -1,0 +1,66 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/layout.xhtml">
+
+    <ui:define name="content">
+        <h1 class="aw-page-title">Pessoas</h1>
+
+        <h:form id="frm" onkeypress="return event.keyCode !== 13">
+
+            <p:toolbar>
+                <p:toolbarGroup>
+                    <p:commandButton value="Atualizar" action="read.xhtml?faces-redirect=true" 
+                                     update="@form" actionListener="#{peopleBean.atualizar()}"/>
+                    <p:button value="Cancelar" outcome="/views/people/read"/>
+                </p:toolbarGroup>
+            </p:toolbar>
+
+            <p:messages id="msgPadrao" autoUpdate="false" />
+
+            <div class="ui-fluid">
+                <p:panelGrid columns="4" layout="grid"
+                             style="margin-top: 20px; margin-bottom: 30px" 
+                             styleClass="panelgrid-noborder"
+                             columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4">
+
+                    <p:outputLabel value="Nome" for="nome"/>
+                    <p:inputText id="nome" value="#{peopleBean.people.nome}"  required="true" maxlength="100">
+                        <p:ajax event="blur" update="nome" listener="#{peopleBean.convertUppNome()}"/>
+                    </p:inputText>
+
+                    <p:outputLabel value="Data Nascimento" for="dataNasc"/>
+                    <p:calendar id="dataNasc" maxdate="#{peopleBean.people.dataCad}" 
+                                value="#{peopleBean.people.dataNasc}" required="true"
+                                locale="pt" pattern="dd/MM/yyyy" mask="true" navigator="true"/>
+
+                    <p:outputLabel value="Data Cadastro" for="dataCad"/>
+                    <p:calendar id="dataCad" value="#{peopleBean.people.dataCad}" pattern="dd/MM/yyyy" disabled="true"/>
+
+                    <p:outputLabel value="Identificação" for="identificacao"/>
+                    <p:selectOneRadio id="identificacao" value="#{peopleBean.habilitar}">
+                        <f:selectItem itemValue="true" itemLabel="CPF / RG"/>
+                        <f:selectItem itemValue="false" itemLabel="Certidão"/>
+                        <p:ajax event="click" update="frm"/>
+                    </p:selectOneRadio>
+
+                    <p:outputLabel value="CPF" for="cpf" rendered="#{peopleBean.habilitar}"/>
+                    <p:inputMask id="cpf" mask="999.999.999-99" value="#{peopleBean.people.cpf}" rendered="#{peopleBean.habilitar}">
+                        <p:ajax event="blur" listener="#{peopleBean.verificaCPF()}" update="msgPadrao"/>
+                    </p:inputMask>
+
+                    <p:outputLabel value="RG" for="rg" rendered="#{peopleBean.habilitar}"/>
+                    <p:inputText id="rg" value="#{peopleBean.people.rg}"  required="true" 
+                                 maxlength="10" rendered="#{peopleBean.habilitar}">
+                        <p:ajax event="blur" update="rg" listener="#{peopleBean.convertUppRg()}"/>
+                    </p:inputText>
+
+                    <p:outputLabel value="Certidão Nascimento" for="certidao" rendered="#{!peopleBean.habilitar}"/>
+                    <p:inputText id="certidao" value="#{peopleBean.people.certidaoNasc}"  required="true" maxlength="50" rendered="#{!peopleBean.habilitar}"/>
+                </p:panelGrid>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
